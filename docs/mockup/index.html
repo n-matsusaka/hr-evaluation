@@ -1,0 +1,3658 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CH評価</title>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='20' fill='%23F99900'/><text x='50' y='68' font-size='60' font-weight='bold' text-anchor='middle' fill='white'>CH</text></svg>">
+<style>
+  /* === コラボハウス ブランドカラー === */
+  :root {
+    --brand-orange: #F99900;
+    --brand-orange-dark: #E08800;
+    --brand-orange-light: #FFF7EB;
+    --brand-orange-100: #FEF0D5;
+    --brand-charcoal: #302D2C;
+    --brand-olive: #574E2E;
+    --brand-gray: #8C7E6A;
+    --brand-warm-white: #FAFAF8;
+    --brand-border: #E8E4DE;
+    --brand-sidebar-text: #F5F0EB;
+    --color-success: #16A34A;
+    --color-success-bg: #F0FDF4;
+    --color-warning: #F59E0B;
+    --color-warning-bg: #FFFBEB;
+    --color-error: #DC2626;
+    --color-error-bg: #FEF2F2;
+    --color-info: #2563EB;
+    --color-info-bg: #EFF6FF;
+    --radius: 8px;
+    --shadow: 0 1px 3px rgba(48,45,44,0.08), 0 1px 2px rgba(48,45,44,0.06);
+    --shadow-md: 0 4px 6px rgba(48,45,44,0.07), 0 2px 4px rgba(48,45,44,0.06);
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Hiragino Kaku Gothic ProN', 'Noto Sans JP', sans-serif;
+    background: var(--brand-warm-white);
+    color: var(--brand-charcoal);
+    line-height: 1.6;
+  }
+
+  /* === ページナビ（モックアップ切り替え）=== */
+  .mock-nav {
+    position: fixed; top: 0; left: 0; right: 0; z-index: 1000;
+    background: var(--brand-charcoal);
+    padding: 8px 16px;
+    display: flex; align-items: center; gap: 8px;
+    overflow-x: auto;
+  }
+  .mock-nav-label {
+    color: var(--brand-orange);
+    font-weight: 700;
+    font-size: 13px;
+    white-space: nowrap;
+    margin-right: 8px;
+  }
+  .mock-nav button {
+    background: transparent;
+    border: 1px solid rgba(245,240,235,0.2);
+    color: var(--brand-sidebar-text);
+    padding: 4px 12px;
+    border-radius: 4px;
+    font-size: 12px;
+    cursor: pointer;
+    white-space: nowrap;
+    transition: all 0.2s;
+  }
+  .mock-nav button:hover, .mock-nav button.active {
+    background: var(--brand-orange);
+    color: #fff;
+    border-color: var(--brand-orange);
+  }
+
+  /* === レイアウト === */
+  .app-container {
+    display: flex;
+    min-height: 100vh;
+    padding-top: 44px;
+  }
+
+  /* サイドバー */
+  .sidebar {
+    width: 240px;
+    background: var(--brand-charcoal);
+    color: var(--brand-sidebar-text);
+    display: flex;
+    flex-direction: column;
+    position: fixed;
+    top: 44px;
+    bottom: 0;
+    left: 0;
+    z-index: 100;
+  }
+  .sidebar-logo {
+    padding: 20px 20px 16px;
+    border-bottom: 1px solid rgba(245,240,235,0.1);
+  }
+  .sidebar-logo .logo-mark {
+    color: var(--brand-orange);
+    font-weight: 800;
+    font-size: 18px;
+  }
+  .sidebar-logo .logo-sub {
+    font-size: 11px;
+    color: var(--brand-gray);
+    margin-top: 2px;
+  }
+  .sidebar-menu {
+    flex: 1;
+    padding: 12px 0;
+    overflow-y: auto;
+  }
+  .sidebar-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 10px 20px;
+    color: var(--brand-sidebar-text);
+    text-decoration: none;
+    font-size: 14px;
+    transition: all 0.15s;
+    cursor: pointer;
+    border-left: 3px solid transparent;
+  }
+  .sidebar-item:hover {
+    background: rgba(249,153,0,0.1);
+  }
+  .sidebar-item.active {
+    background: rgba(249,153,0,0.15);
+    border-left-color: var(--brand-orange);
+    color: #fff;
+    font-weight: 600;
+  }
+  .sidebar-item .icon {
+    width: 20px;
+    text-align: center;
+    font-size: 16px;
+  }
+  .sidebar-section {
+    padding: 16px 20px 6px;
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    color: var(--brand-gray);
+  }
+  .sidebar-badge {
+    margin-left: auto;
+    background: var(--brand-orange);
+    color: #fff;
+    font-size: 11px;
+    padding: 1px 7px;
+    border-radius: 10px;
+    font-weight: 600;
+  }
+  .sidebar-footer {
+    padding: 12px 20px;
+    border-top: 1px solid rgba(245,240,235,0.1);
+    font-size: 12px;
+    color: var(--brand-gray);
+  }
+  .sidebar-footer .user-name {
+    color: var(--brand-sidebar-text);
+    font-weight: 600;
+    font-size: 13px;
+  }
+  .sidebar-footer .user-role {
+    font-size: 11px;
+    margin-top: 2px;
+  }
+
+  /* メインコンテンツ */
+  .main-content {
+    flex: 1;
+    margin-left: 240px;
+    padding: 28px 32px;
+    min-height: calc(100vh - 44px);
+  }
+
+  /* ヘッダーバー */
+  .top-bar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 24px;
+  }
+  .top-bar h1 {
+    font-size: 22px;
+    font-weight: 700;
+    color: var(--brand-charcoal);
+  }
+  .top-bar-actions {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+  }
+
+  /* === カード === */
+  .card {
+    background: #fff;
+    border: 1px solid var(--brand-border);
+    border-radius: var(--radius);
+    box-shadow: var(--shadow);
+  }
+  .card-header {
+    padding: 16px 20px;
+    border-bottom: 1px solid var(--brand-border);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+  .card-title {
+    font-size: 15px;
+    font-weight: 700;
+  }
+  .card-content {
+    padding: 20px;
+  }
+
+  /* === ボタン === */
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 8px 16px;
+    border-radius: 6px;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    border: none;
+    transition: all 0.15s;
+  }
+  .btn-primary {
+    background: var(--brand-orange);
+    color: #fff;
+  }
+  .btn-primary:hover {
+    background: var(--brand-orange-dark);
+  }
+  .btn-outline {
+    background: transparent;
+    color: var(--brand-charcoal);
+    border: 1px solid var(--brand-border);
+  }
+  .btn-outline:hover {
+    background: var(--brand-orange-light);
+    border-color: var(--brand-orange);
+    color: var(--brand-orange-dark);
+  }
+  .btn-ghost {
+    background: transparent;
+    color: var(--brand-olive);
+    padding: 6px 10px;
+  }
+  .btn-ghost:hover {
+    background: var(--brand-orange-light);
+    color: var(--brand-orange-dark);
+  }
+  .btn-sm {
+    padding: 5px 12px;
+    font-size: 13px;
+  }
+
+  /* === バッジ === */
+  .badge {
+    display: inline-flex;
+    align-items: center;
+    padding: 2px 10px;
+    border-radius: 12px;
+    font-size: 12px;
+    font-weight: 600;
+  }
+  .badge-draft { background: #f1f0ee; color: var(--brand-gray); }
+  .badge-progress { background: var(--brand-orange-100); color: var(--brand-orange-dark); }
+  .badge-submitted { background: var(--color-info-bg); color: var(--color-info); }
+  .badge-finalized { background: var(--color-success-bg); color: var(--color-success); }
+  .badge-warning { background: var(--color-warning-bg); color: #92400E; }
+  .badge-error { background: var(--color-error-bg); color: var(--color-error); }
+
+  /* === タスクカード === */
+  .task-card {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 14px 16px;
+    border: 1px solid var(--brand-border);
+    border-radius: var(--radius);
+    margin-bottom: 8px;
+    background: #fff;
+    transition: all 0.15s;
+    cursor: pointer;
+  }
+  .task-card:hover {
+    border-color: var(--brand-orange);
+    box-shadow: var(--shadow-md);
+  }
+  .task-icon {
+    width: 36px;
+    height: 36px;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 18px;
+    flex-shrink: 0;
+  }
+  .task-icon.warning { background: var(--color-warning-bg); }
+  .task-icon.info { background: var(--color-info-bg); }
+  .task-icon.success { background: var(--color-success-bg); }
+  .task-body { flex: 1; }
+  .task-body .label { font-size: 14px; font-weight: 600; }
+  .task-body .desc { font-size: 12px; color: var(--brand-gray); margin-top: 1px; }
+  .task-arrow { color: var(--brand-gray); font-size: 18px; }
+
+  /* === 統計カード === */
+  .stats-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: 12px;
+    margin-bottom: 20px;
+  }
+  .stat-card {
+    background: #fff;
+    border: 1px solid var(--brand-border);
+    border-radius: var(--radius);
+    padding: 16px;
+    text-align: center;
+  }
+  .stat-value {
+    font-size: 28px;
+    font-weight: 800;
+    color: var(--brand-charcoal);
+  }
+  .stat-value.orange { color: var(--brand-orange); }
+  .stat-value.green { color: var(--color-success); }
+  .stat-label {
+    font-size: 12px;
+    color: var(--brand-gray);
+    margin-top: 4px;
+  }
+  .stat-bar {
+    height: 4px;
+    background: var(--brand-border);
+    border-radius: 2px;
+    margin-top: 8px;
+    overflow: hidden;
+  }
+  .stat-bar-fill {
+    height: 100%;
+    border-radius: 2px;
+    background: var(--brand-orange);
+  }
+
+  /* === テーブル === */
+  .table-wrap {
+    overflow-x: auto;
+  }
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 14px;
+  }
+  th {
+    text-align: left;
+    padding: 10px 12px;
+    font-weight: 600;
+    color: var(--brand-olive);
+    font-size: 12px;
+    border-bottom: 2px solid var(--brand-border);
+    background: var(--brand-warm-white);
+  }
+  td {
+    padding: 10px 12px;
+    border-bottom: 1px solid var(--brand-border);
+  }
+  tr:hover td {
+    background: var(--brand-orange-light);
+  }
+
+  /* === タブ === */
+  .tabs {
+    display: flex;
+    gap: 0;
+    border-bottom: 2px solid var(--brand-border);
+    overflow-x: auto;
+    margin-bottom: 24px;
+  }
+  .tab {
+    padding: 10px 16px;
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--brand-gray);
+    cursor: pointer;
+    white-space: nowrap;
+    border-bottom: 2px solid transparent;
+    margin-bottom: -2px;
+    transition: all 0.15s;
+  }
+  .tab:hover {
+    color: var(--brand-orange);
+  }
+  .tab.active {
+    color: var(--brand-orange);
+    border-bottom-color: var(--brand-orange);
+    font-weight: 700;
+  }
+
+  /* === フォーム === */
+  .form-group {
+    margin-bottom: 16px;
+  }
+  .form-label {
+    display: block;
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--brand-olive);
+    margin-bottom: 6px;
+  }
+  .form-input {
+    width: 100%;
+    padding: 8px 12px;
+    border: 1px solid var(--brand-border);
+    border-radius: 6px;
+    font-size: 14px;
+    color: var(--brand-charcoal);
+    background: #fff;
+    transition: border-color 0.15s;
+  }
+  .form-input:focus {
+    outline: none;
+    border-color: var(--brand-orange);
+    box-shadow: 0 0 0 3px rgba(249,153,0,0.1);
+  }
+  textarea.form-input {
+    resize: vertical;
+    min-height: 80px;
+  }
+
+  /* スコアボタン */
+  .score-buttons {
+    display: flex;
+    gap: 4px;
+  }
+  .score-btn {
+    width: 40px;
+    height: 40px;
+    border-radius: 6px;
+    border: 1px solid var(--brand-border);
+    background: #fff;
+    font-size: 16px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.15s;
+    color: var(--brand-gray);
+  }
+  .score-btn:hover {
+    border-color: var(--brand-orange);
+    color: var(--brand-orange);
+    background: var(--brand-orange-light);
+  }
+  .score-btn.selected {
+    background: var(--brand-orange);
+    color: #fff;
+    border-color: var(--brand-orange);
+  }
+
+  /* ランク選択 */
+  .rank-group {
+    display: flex;
+    gap: 6px;
+  }
+  .rank-btn {
+    padding: 6px 16px;
+    border-radius: 6px;
+    border: 1px solid var(--brand-border);
+    background: #fff;
+    font-size: 14px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.15s;
+    color: var(--brand-gray);
+  }
+  .rank-btn:hover {
+    border-color: var(--brand-orange);
+    color: var(--brand-orange);
+  }
+  .rank-btn.selected {
+    background: var(--brand-orange);
+    color: #fff;
+    border-color: var(--brand-orange);
+  }
+
+  /* ツールチップ */
+  .tooltip-box {
+    background: var(--brand-orange-light);
+    border: 1px solid var(--brand-orange-100);
+    border-radius: 6px;
+    padding: 10px 14px;
+    font-size: 13px;
+    color: var(--brand-olive);
+    margin-top: 8px;
+    line-height: 1.5;
+  }
+
+  /* プログレスバー */
+  .progress-row {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 6px;
+  }
+  .progress-label {
+    font-size: 12px;
+    color: var(--brand-gray);
+    width: 60px;
+    flex-shrink: 0;
+  }
+  .progress-bar {
+    flex: 1;
+    height: 8px;
+    background: var(--brand-border);
+    border-radius: 4px;
+    overflow: hidden;
+  }
+  .progress-fill {
+    height: 100%;
+    border-radius: 4px;
+  }
+  .progress-fill.orange { background: var(--brand-orange); }
+  .progress-fill.green { background: var(--color-success); }
+  .progress-fill.blue { background: var(--color-info); }
+  .progress-num {
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--brand-charcoal);
+    width: 40px;
+    text-align: right;
+    flex-shrink: 0;
+  }
+
+  /* 通知ドット */
+  .notif-dot {
+    width: 8px; height: 8px;
+    background: var(--color-error);
+    border-radius: 50%;
+    display: inline-block;
+  }
+
+  /* 結果ボックス */
+  .result-box {
+    background: var(--brand-orange-light);
+    border: 1px solid var(--brand-orange-100);
+    border-radius: var(--radius);
+    padding: 16px 20px;
+    margin-top: 16px;
+  }
+  .result-box .result-label {
+    font-size: 12px;
+    color: var(--brand-gray);
+  }
+  .result-box .result-value {
+    font-size: 24px;
+    font-weight: 800;
+    color: var(--brand-orange);
+  }
+
+  /* ページ非表示 */
+  .page { display: none; }
+  .page.active { display: block; }
+
+  /* グリッド */
+  .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+  .grid-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 12px; }
+
+  /* セパレータ */
+  .separator {
+    border: none;
+    border-top: 1px solid var(--brand-border);
+    margin: 20px 0;
+  }
+
+  /* ログイン画面 */
+  .login-page {
+    display: none;
+    min-height: 100vh;
+    background: linear-gradient(135deg, var(--brand-charcoal) 0%, #4a453e 100%);
+    justify-content: center;
+    align-items: center;
+    padding-top: 44px;
+  }
+  .login-page.active { display: flex; }
+  .login-card {
+    background: #fff;
+    border-radius: 12px;
+    padding: 48px 40px;
+    width: 400px;
+    max-width: 90vw;
+    text-align: center;
+    box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+  }
+  .login-logo {
+    font-size: 28px;
+    font-weight: 800;
+    color: var(--brand-orange);
+    margin-bottom: 4px;
+  }
+  .login-sub {
+    font-size: 13px;
+    color: var(--brand-gray);
+    margin-bottom: 32px;
+  }
+  .google-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    width: 100%;
+    padding: 12px;
+    border: 1px solid var(--brand-border);
+    border-radius: 8px;
+    font-size: 15px;
+    font-weight: 600;
+    cursor: pointer;
+    background: #fff;
+    transition: all 0.15s;
+    color: var(--brand-charcoal);
+  }
+  .google-btn:hover {
+    background: var(--brand-warm-white);
+    border-color: var(--brand-gray);
+  }
+  .google-icon {
+    width: 20px; height: 20px;
+    background: conic-gradient(from -45deg, #ea4335, #4285f4, #34a853, #fbbc05, #ea4335);
+    border-radius: 50%;
+  }
+
+  /* 自動保存インジケーター */
+  .autosave {
+    display: flex; align-items: center; gap: 6px;
+    font-size: 12px; color: var(--color-success);
+  }
+  .autosave-dot {
+    width: 6px; height: 6px;
+    background: var(--color-success);
+    border-radius: 50%;
+  }
+
+  /* チェックリスト */
+  .checklist-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 8px 0;
+    border-bottom: 1px solid var(--brand-border);
+    font-size: 14px;
+  }
+  .checklist-item input[type="checkbox"] {
+    accent-color: var(--brand-orange);
+    width: 18px;
+    height: 18px;
+  }
+</style>
+</head>
+<body>
+
+<!-- モックアップ切り替えナビ -->
+<div class="mock-nav">
+  <span class="mock-nav-label">MOCKUP</span>
+  <button class="active" onclick="showPage('login')">ログイン</button>
+  <button onclick="showPage('dashboard-employee')">ダッシュボード(社員)</button>
+  <button onclick="showPage('dashboard-evaluator')">ダッシュボード(評価者)</button>
+  <button onclick="showPage('dashboard-admin')">ダッシュボード(管理者)</button>
+  <button onclick="showPage('eval-list')">評価一覧</button>
+  <button onclick="showPage('eval-edit')">評価シート編集</button>
+  <button onclick="showPage('eval-ability')">能力評価</button>
+  <button onclick="showPage('eval-behavior')">行動評価</button>
+  <button onclick="showPage('eval-leader')">Leader Radar</button>
+  <button onclick="showPage('employees')">社員一覧</button>
+  <button onclick="showPage('eval-goal')">目標設定</button>
+  <button onclick="showPage('eval-result')">成果評価</button>
+  <button onclick="showPage('eval-checklist')">チェックリスト</button>
+  <button onclick="showPage('eval-summary')">総評</button>
+  <button onclick="showPage('eval-bonus')">賞与情報</button>
+  <button onclick="showPage('behavior-input')">行動評価入力</button>
+  <button onclick="showPage('meetings')">面談記録</button>
+  <button onclick="showPage('import-bonus')">賞与取込</button>
+  <button onclick="showPage('level-changes')">等級変更候補</button>
+  <button onclick="showPage('period-manage')">評価期間管理</button>
+  <button onclick="showPage('eval-new')">新規評価作成</button>
+  <button onclick="showPage('eval-view')">評価閲覧(確定)</button>
+  <button onclick="showPage('eval-print')">印刷用ビュー</button>
+  <button onclick="showPage('behavior-list')">行動評価依頼一覧</button>
+  <button onclick="showPage('employee-detail')">社員詳細</button>
+  <button onclick="showPage('meeting-new')">面談記録入力</button>
+  <button onclick="showPage('admin-overview')">全社俯瞰</button>
+  <button onclick="showPage('import-projects')">物件データ取込</button>
+</div>
+
+<!-- ===== ログイン画面 ===== -->
+<div class="login-page active" id="page-login">
+  <div class="login-card">
+    <div class="login-logo">コラボハウス</div>
+    <div class="login-sub">人事評価システム</div>
+    <button class="google-btn" onclick="showPage('dashboard-employee')">
+      <div class="google-icon"></div>
+      Googleアカウントでログイン
+    </button>
+    <p style="margin-top: 16px; font-size: 12px; color: var(--brand-gray);">
+      コラボハウスのGoogle Workspaceアカウントでログインしてください
+    </p>
+  </div>
+</div>
+
+<!-- ===== アプリ共通レイアウト ===== -->
+<div class="app-container" id="app-container" style="display:none;">
+
+  <!-- サイドバー -->
+  <aside class="sidebar">
+    <div class="sidebar-logo">
+      <div class="logo-mark">コラボハウス</div>
+      <div class="logo-sub">人事評価システム</div>
+    </div>
+    <nav class="sidebar-menu">
+      <div class="sidebar-section">メイン</div>
+      <a class="sidebar-item active" id="nav-dashboard" onclick="showPage('dashboard-employee')">
+        <span class="icon">📊</span>ダッシュボード
+      </a>
+      <a class="sidebar-item" id="nav-eval" onclick="showPage('eval-list')">
+        <span class="icon">📋</span>評価シート
+      </a>
+      <a class="sidebar-item" id="nav-goal" onclick="showPage('eval-goal')">
+        <span class="icon">🎯</span>目標設定
+      </a>
+      <a class="sidebar-item" id="nav-behavior" onclick="showPage('behavior-list')">
+        <span class="icon">👥</span>行動評価
+        <span class="sidebar-badge">2</span>
+      </a>
+      <a class="sidebar-item" id="nav-meeting" onclick="showPage('meetings')">
+        <span class="icon">📝</span>面談記録
+      </a>
+
+      <div class="sidebar-section">管理</div>
+      <a class="sidebar-item" id="nav-employees" onclick="showPage('employees')">
+        <span class="icon">👤</span>社員一覧
+      </a>
+      <a class="sidebar-item" id="nav-period" onclick="showPage('period-manage')">
+        <span class="icon">📅</span>評価期間
+      </a>
+      <a class="sidebar-item" id="nav-import" onclick="showPage('import-bonus')">
+        <span class="icon">📥</span>データ取込
+      </a>
+      <a class="sidebar-item" id="nav-settings">
+        <span class="icon">⚙</span>設定
+      </a>
+    </nav>
+    <div class="sidebar-footer">
+      <div class="user-name">松坂 直樹</div>
+      <div class="user-role">設計営業 / Lv.4-2 / 管理者</div>
+    </div>
+  </aside>
+
+  <!-- メインコンテンツエリア -->
+  <main class="main-content">
+
+    <!-- ===== ダッシュボード：被評価者 ===== -->
+    <div class="page" id="page-dashboard-employee">
+
+      <!-- ウェルカムバナー -->
+      <div style="background: linear-gradient(135deg, var(--brand-charcoal) 0%, #4a453e 60%, var(--brand-orange) 100%); border-radius: 16px; padding: 32px 36px; margin-bottom: 24px; position: relative; overflow: hidden;">
+        <div style="position: absolute; right: -20px; top: -20px; width: 200px; height: 200px; background: rgba(249,153,0,0.15); border-radius: 50%;"></div>
+        <div style="position: absolute; right: 60px; bottom: -40px; width: 120px; height: 120px; background: rgba(249,153,0,0.1); border-radius: 50%;"></div>
+        <div style="position: relative; z-index: 1;">
+          <p style="color: rgba(255,255,255,0.7); font-size: 13px; margin-bottom: 4px;">2026年度 上期</p>
+          <h1 style="color: #fff; font-size: 24px; font-weight: 800; margin-bottom: 4px;">おかえりなさい、松坂 直樹さん</h1>
+          <p style="color: rgba(255,255,255,0.6); font-size: 14px;">設計営業 / Lv.4-2 / スタジオA</p>
+        </div>
+        <!-- 通知バッジ -->
+        <div style="position: absolute; top: 24px; right: 24px; z-index: 2; display: flex; gap: 8px;">
+          <div style="background: rgba(255,255,255,0.15); backdrop-filter: blur(8px); border: 1px solid rgba(255,255,255,0.2); border-radius: 10px; padding: 8px 14px; display: flex; align-items: center; gap: 6px; cursor: pointer;">
+            <span style="color: var(--brand-orange); font-size: 16px;">🔔</span>
+            <span style="color: #fff; font-size: 13px; font-weight: 600;">3件</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- やることカード（目立つ版） -->
+      <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 24px;">
+        <div data-page="eval-goal" style="background: linear-gradient(135deg, #FFF7EB 0%, #FEF0D5 100%); border: 1px solid var(--brand-orange); border-radius: 12px; padding: 20px; cursor: pointer; transition: all 0.2s; position: relative; overflow: hidden;" onmouseover="this.style.transform='translateY(-2px)'; this.style.boxShadow='0 8px 24px rgba(249,153,0,0.2)'" onmouseout="this.style.transform=''; this.style.boxShadow=''">
+          <div style="position: absolute; right: -10px; top: -10px; width: 60px; height: 60px; background: rgba(249,153,0,0.1); border-radius: 50%;"></div>
+          <div style="font-size: 28px; margin-bottom: 8px;">🎯</div>
+          <div style="font-size: 15px; font-weight: 700; color: var(--brand-charcoal); margin-bottom: 4px;">目標設定が未完了</div>
+          <div style="font-size: 12px; color: var(--brand-olive);">締切: 2026年4月15日まで</div>
+          <div style="display: flex; align-items: center; gap: 4px; margin-top: 12px; color: var(--brand-orange); font-size: 13px; font-weight: 600;">入力する <span style="font-size:16px;">→</span></div>
+        </div>
+        <div data-page="behavior-list" style="background: linear-gradient(135deg, #EFF6FF 0%, #DBEAFE 100%); border: 1px solid var(--color-info); border-radius: 12px; padding: 20px; cursor: pointer; transition: all 0.2s; position: relative; overflow: hidden;" onmouseover="this.style.transform='translateY(-2px)'; this.style.boxShadow='0 8px 24px rgba(37,99,235,0.15)'" onmouseout="this.style.transform=''; this.style.boxShadow=''">
+          <div style="position: absolute; right: -10px; top: -10px; width: 60px; height: 60px; background: rgba(37,99,235,0.08); border-radius: 50%;"></div>
+          <div style="font-size: 28px; margin-bottom: 8px;">👥</div>
+          <div style="font-size: 15px; font-weight: 700; color: var(--brand-charcoal); margin-bottom: 4px;">行動評価の依頼 2件</div>
+          <div style="font-size: 12px; color: var(--brand-olive);">田中太郎さん、鈴木花子さん</div>
+          <div style="display: flex; align-items: center; gap: 4px; margin-top: 12px; color: var(--color-info); font-size: 13px; font-weight: 600;">回答する <span style="font-size:16px;">→</span></div>
+        </div>
+      </div>
+
+      <!-- 評価状況（ドーナツチャート3つ + レーダーチャート） -->
+      <h3 style="font-size: 16px; font-weight: 700; margin-bottom: 16px;">📊 今期の評価状況</h3>
+      <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 24px;">
+
+        <!-- 左: ドーナツチャート3つ -->
+        <div class="card">
+          <div class="card-content" style="display: flex; justify-content: space-around; align-items: center; padding: 24px 16px;">
+            <!-- 能力評価 ドーナツ -->
+            <div style="text-align: center;">
+              <div style="position: relative; width: 110px; height: 110px; margin: 0 auto 8px;">
+                <svg viewBox="0 0 120 120" style="transform: rotate(-90deg);">
+                  <circle cx="60" cy="60" r="50" fill="none" stroke="#E8E4DE" stroke-width="10"/>
+                  <circle cx="60" cy="60" r="50" fill="none" stroke="#F99900" stroke-width="10"
+                    stroke-dasharray="314" stroke-dashoffset="75" stroke-linecap="round"/>
+                </svg>
+                <div style="position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center;">
+                  <span style="font-size: 24px; font-weight: 800; color: var(--brand-orange);">3.80</span>
+                  <span style="font-size: 10px; color: var(--brand-gray);">/ 5.00</span>
+                </div>
+              </div>
+              <div style="font-size: 13px; font-weight: 600; color: var(--brand-charcoal);">能力評価</div>
+            </div>
+            <!-- 行動評価 ドーナツ -->
+            <div style="text-align: center;">
+              <div style="position: relative; width: 110px; height: 110px; margin: 0 auto 8px;">
+                <svg viewBox="0 0 120 120" style="transform: rotate(-90deg);">
+                  <circle cx="60" cy="60" r="50" fill="none" stroke="#E8E4DE" stroke-width="10"/>
+                  <circle cx="60" cy="60" r="50" fill="none" stroke="#16A34A" stroke-width="10"
+                    stroke-dasharray="314" stroke-dashoffset="79" stroke-linecap="round"/>
+                </svg>
+                <div style="position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center;">
+                  <span style="font-size: 24px; font-weight: 800; color: var(--color-success);">24</span>
+                  <span style="font-size: 10px; color: var(--brand-gray);">/ 32点</span>
+                </div>
+              </div>
+              <div style="font-size: 13px; font-weight: 600; color: var(--brand-charcoal);">行動評価</div>
+              <div style="font-size: 11px; color: var(--color-success); margin-top: 2px;">✅ ステップアップ可</div>
+            </div>
+            <!-- 成果評価 ドーナツ -->
+            <div style="text-align: center;">
+              <div style="position: relative; width: 110px; height: 110px; margin: 0 auto 8px;">
+                <svg viewBox="0 0 120 120" style="transform: rotate(-90deg);">
+                  <circle cx="60" cy="60" r="50" fill="none" stroke="#E8E4DE" stroke-width="10"/>
+                  <circle cx="60" cy="60" r="50" fill="none" stroke="#E8E4DE" stroke-width="10"
+                    stroke-dasharray="314" stroke-dashoffset="314" stroke-linecap="round"/>
+                </svg>
+                <div style="position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center;">
+                  <span style="font-size: 24px; font-weight: 800; color: var(--brand-gray);">—</span>
+                  <span style="font-size: 10px; color: var(--brand-gray);">入力待ち</span>
+                </div>
+              </div>
+              <div style="font-size: 13px; font-weight: 600; color: var(--brand-charcoal);">成果評価</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- 右: レーダーチャート（能力5項目） -->
+        <div class="card">
+          <div class="card-header" style="padding: 12px 20px;">
+            <span class="card-title" style="font-size: 14px;">能力評価レーダー</span>
+            <span style="font-size: 12px; color: var(--brand-gray);">Lv.4基準</span>
+          </div>
+          <div class="card-content" style="display: flex; justify-content: center; padding: 12px 16px 20px;">
+            <svg viewBox="0 0 300 260" width="300" height="260">
+              <!-- 背景の五角形グリッド（5段階） -->
+              <g transform="translate(150,130)">
+                <!-- Lv5の五角形 -->
+                <polygon points="0,-100 95,-31 59,81 -59,81 -95,-31" fill="none" stroke="#E8E4DE" stroke-width="1"/>
+                <!-- Lv4 -->
+                <polygon points="0,-80 76,-25 47,65 -47,65 -76,-25" fill="none" stroke="#E8E4DE" stroke-width="1"/>
+                <!-- Lv3 -->
+                <polygon points="0,-60 57,-19 35,49 -35,49 -57,-19" fill="none" stroke="#E8E4DE" stroke-width="1"/>
+                <!-- Lv2 -->
+                <polygon points="0,-40 38,-12 24,32 -24,32 -38,-12" fill="none" stroke="#E8E4DE" stroke-width="1"/>
+                <!-- Lv1 -->
+                <polygon points="0,-20 19,-6 12,16 -12,16 -19,-6" fill="none" stroke="#E8E4DE" stroke-width="1"/>
+                <!-- 軸線 -->
+                <line x1="0" y1="0" x2="0" y2="-100" stroke="#E8E4DE" stroke-width="1"/>
+                <line x1="0" y1="0" x2="95" y2="-31" stroke="#E8E4DE" stroke-width="1"/>
+                <line x1="0" y1="0" x2="59" y2="81" stroke="#E8E4DE" stroke-width="1"/>
+                <line x1="0" y1="0" x2="-59" y2="81" stroke="#E8E4DE" stroke-width="1"/>
+                <line x1="0" y1="0" x2="-95" y2="-31" stroke="#E8E4DE" stroke-width="1"/>
+
+                <!-- データ: 4, 5, 3, 4, 3 (経験値, 設計力, 顧客対応力, 業務推進力, 自己成長) -->
+                <polygon points="0,-80 95,-31 35,49 -47,65 -57,-19"
+                  fill="rgba(249,153,0,0.15)" stroke="#F99900" stroke-width="2.5"/>
+                <!-- データポイント -->
+                <circle cx="0" cy="-80" r="5" fill="#F99900"/>
+                <circle cx="95" cy="-31" r="5" fill="#F99900"/>
+                <circle cx="35" cy="49" r="5" fill="#F99900"/>
+                <circle cx="-47" cy="65" r="5" fill="#F99900"/>
+                <circle cx="-57" cy="-19" r="5" fill="#F99900"/>
+              </g>
+
+              <!-- ラベル -->
+              <text x="150" y="18" text-anchor="middle" font-size="12" font-weight="600" fill="#302D2C">経験値</text>
+              <text x="150" y="32" text-anchor="middle" font-size="11" fill="#F99900" font-weight="700">4</text>
+              <text x="262" y="95" text-anchor="start" font-size="12" font-weight="600" fill="#302D2C">設計力</text>
+              <text x="262" y="109" text-anchor="start" font-size="11" fill="#F99900" font-weight="700">5</text>
+              <text x="222" y="222" text-anchor="start" font-size="12" font-weight="600" fill="#302D2C">顧客対応力</text>
+              <text x="222" y="236" text-anchor="start" font-size="11" fill="#F99900" font-weight="700">3</text>
+              <text x="78" y="222" text-anchor="end" font-size="12" font-weight="600" fill="#302D2C">業務推進力</text>
+              <text x="78" y="236" text-anchor="end" font-size="11" fill="#F99900" font-weight="700">4</text>
+              <text x="38" y="95" text-anchor="end" font-size="12" font-weight="600" fill="#302D2C">自己成長</text>
+              <text x="38" y="109" text-anchor="end" font-size="11" fill="#F99900" font-weight="700">3</text>
+            </svg>
+          </div>
+        </div>
+      </div>
+
+      <!-- 評価プロセス進捗ステッパー -->
+      <div class="card" style="margin-bottom: 24px;">
+        <div class="card-header" style="padding: 12px 20px;">
+          <span class="card-title" style="font-size: 14px;">📋 評価プロセスの進捗</span>
+        </div>
+        <div class="card-content" style="padding: 20px 24px;">
+          <div style="display: flex; align-items: center; justify-content: space-between; position: relative;">
+            <!-- コネクタライン -->
+            <div style="position: absolute; top: 20px; left: 40px; right: 40px; height: 3px; background: var(--brand-border); z-index: 0;"></div>
+            <div style="position: absolute; top: 20px; left: 40px; width: 25%; height: 3px; background: var(--color-success); z-index: 1;"></div>
+
+            <!-- Step 1: 完了 -->
+            <div style="text-align: center; z-index: 2; flex: 1;">
+              <div style="width: 40px; height: 40px; border-radius: 50%; background: var(--color-success); color: #fff; display: flex; align-items: center; justify-content: center; margin: 0 auto 6px; font-size: 16px; font-weight: 700;">✓</div>
+              <div style="font-size: 12px; font-weight: 600; color: var(--color-success);">目標設定</div>
+              <div style="font-size: 10px; color: var(--brand-gray);">4/10 完了</div>
+            </div>
+            <!-- Step 2: 進行中 -->
+            <div style="text-align: center; z-index: 2; flex: 1;">
+              <div style="width: 40px; height: 40px; border-radius: 50%; background: var(--brand-orange); color: #fff; display: flex; align-items: center; justify-content: center; margin: 0 auto 6px; font-size: 16px; font-weight: 700;">2</div>
+              <div style="font-size: 12px; font-weight: 600; color: var(--brand-orange);">評価入力</div>
+              <div style="font-size: 10px; color: var(--brand-gray);">進行中</div>
+            </div>
+            <!-- Step 3: 未着手 -->
+            <div style="text-align: center; z-index: 2; flex: 1;">
+              <div style="width: 40px; height: 40px; border-radius: 50%; background: #fff; border: 2px solid var(--brand-border); color: var(--brand-gray); display: flex; align-items: center; justify-content: center; margin: 0 auto 6px; font-size: 14px; font-weight: 700;">3</div>
+              <div style="font-size: 12px; font-weight: 600; color: var(--brand-gray);">レビュー</div>
+              <div style="font-size: 10px; color: var(--brand-gray);">—</div>
+            </div>
+            <!-- Step 4: 未着手 -->
+            <div style="text-align: center; z-index: 2; flex: 1;">
+              <div style="width: 40px; height: 40px; border-radius: 50%; background: #fff; border: 2px solid var(--brand-border); color: var(--brand-gray); display: flex; align-items: center; justify-content: center; margin: 0 auto 6px; font-size: 14px; font-weight: 700;">4</div>
+              <div style="font-size: 12px; font-weight: 600; color: var(--brand-gray);">確定</div>
+              <div style="font-size: 10px; color: var(--brand-gray);">—</div>
+            </div>
+            <!-- Step 5: 未着手 -->
+            <div style="text-align: center; z-index: 2; flex: 1;">
+              <div style="width: 40px; height: 40px; border-radius: 50%; background: #fff; border: 2px solid var(--brand-border); color: var(--brand-gray); display: flex; align-items: center; justify-content: center; margin: 0 auto 6px; font-size: 14px; font-weight: 700;">5</div>
+              <div style="font-size: 12px; font-weight: 600; color: var(--brand-gray);">公開</div>
+              <div style="font-size: 10px; color: var(--brand-gray);">—</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 下段: 賞与チャート + チェックリスト -->
+      <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px;">
+
+        <!-- 賞与推移 棒グラフ -->
+        <div class="card">
+          <div class="card-header" style="padding: 12px 20px;">
+            <span class="card-title" style="font-size: 14px;">💰 賞与推移</span>
+          </div>
+          <div class="card-content" style="padding: 16px 20px 20px;">
+            <div style="display: flex; align-items: flex-end; justify-content: space-around; height: 160px; padding-bottom: 4px; border-bottom: 1px solid var(--brand-border);">
+              <!-- 2024夏 -->
+              <div style="text-align: center; flex: 1;">
+                <div style="font-size: 11px; font-weight: 600; color: var(--brand-gray); margin-bottom: 4px;">¥420K</div>
+                <div style="width: 36px; margin: 0 auto; border-radius: 4px 4px 0 0; background: linear-gradient(to top, #E8E4DE, #d4cfc7); height: 84px;"></div>
+              </div>
+              <!-- 2024冬 -->
+              <div style="text-align: center; flex: 1;">
+                <div style="font-size: 11px; font-weight: 600; color: var(--brand-gray); margin-bottom: 4px;">¥450K</div>
+                <div style="width: 36px; margin: 0 auto; border-radius: 4px 4px 0 0; background: linear-gradient(to top, #E8E4DE, #d4cfc7); height: 90px;"></div>
+              </div>
+              <!-- 2025夏 -->
+              <div style="text-align: center; flex: 1;">
+                <div style="font-size: 11px; font-weight: 600; color: var(--brand-olive); margin-bottom: 4px;">¥480K</div>
+                <div style="width: 36px; margin: 0 auto; border-radius: 4px 4px 0 0; background: linear-gradient(to top, var(--brand-orange-100), #fcd99a); height: 96px;"></div>
+              </div>
+              <!-- 2025冬 -->
+              <div style="text-align: center; flex: 1;">
+                <div style="font-size: 11px; font-weight: 700; color: var(--brand-orange); margin-bottom: 4px;">¥520K</div>
+                <div style="width: 36px; margin: 0 auto; border-radius: 4px 4px 0 0; background: linear-gradient(to top, var(--brand-orange), #fbb233); height: 104px;"></div>
+              </div>
+              <!-- 2026夏 予測 -->
+              <div style="text-align: center; flex: 1;">
+                <div style="font-size: 11px; font-weight: 600; color: var(--brand-gray); margin-bottom: 4px;">—</div>
+                <div style="width: 36px; margin: 0 auto; border-radius: 4px 4px 0 0; border: 2px dashed var(--brand-border); height: 100px; background: repeating-linear-gradient(45deg, transparent, transparent 4px, rgba(232,228,222,0.3) 4px, rgba(232,228,222,0.3) 8px);"></div>
+              </div>
+            </div>
+            <div style="display: flex; justify-content: space-around; margin-top: 6px;">
+              <span style="font-size: 10px; color: var(--brand-gray); flex: 1; text-align: center;">24年夏</span>
+              <span style="font-size: 10px; color: var(--brand-gray); flex: 1; text-align: center;">24年冬</span>
+              <span style="font-size: 10px; color: var(--brand-gray); flex: 1; text-align: center;">25年夏</span>
+              <span style="font-size: 10px; color: var(--brand-gray); flex: 1; text-align: center;">25年冬</span>
+              <span style="font-size: 10px; color: var(--brand-gray); flex: 1; text-align: center;">26年夏</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- チェックリスト進捗 -->
+        <div class="card">
+          <div class="card-header" style="padding: 12px 20px;">
+            <span class="card-title" style="font-size: 14px;">✅ チェックリスト進捗</span>
+            <span style="font-size: 13px; font-weight: 700; color: var(--brand-orange);">12 / 15</span>
+          </div>
+          <div class="card-content" style="padding: 16px 20px;">
+            <!-- 円形プログレス -->
+            <div style="display: flex; align-items: center; gap: 24px; margin-bottom: 16px;">
+              <div style="position: relative; width: 80px; height: 80px; flex-shrink: 0;">
+                <svg viewBox="0 0 100 100" style="transform: rotate(-90deg);">
+                  <circle cx="50" cy="50" r="40" fill="none" stroke="#E8E4DE" stroke-width="8"/>
+                  <circle cx="50" cy="50" r="40" fill="none" stroke="#F99900" stroke-width="8"
+                    stroke-dasharray="251" stroke-dashoffset="50" stroke-linecap="round"/>
+                </svg>
+                <div style="position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; font-size: 18px; font-weight: 800; color: var(--brand-orange);">80%</div>
+              </div>
+              <div style="flex: 1;">
+                <div style="font-size: 13px; color: var(--brand-olive); margin-bottom: 8px;">残り <strong style="color: var(--brand-charcoal);">3項目</strong> でコンプリート</div>
+                <div style="font-size: 12px; color: var(--brand-gray); line-height: 1.6;">
+                  ☐ 確認申請を単独で完了<br>
+                  ☐ 構造計算書のチェック<br>
+                  ☐ 現場での是正指示
+                </div>
+              </div>
+            </div>
+            <!-- ミニバーグラフ（カテゴリ別） -->
+            <div style="border-top: 1px solid var(--brand-border); padding-top: 12px;">
+              <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 6px;">
+                <span style="font-size: 11px; color: var(--brand-gray); width: 50px;">設計系</span>
+                <div style="flex: 1; height: 6px; background: var(--brand-border); border-radius: 3px; overflow: hidden;">
+                  <div style="width: 100%; height: 100%; background: var(--color-success); border-radius: 3px;"></div>
+                </div>
+                <span style="font-size: 11px; font-weight: 600; color: var(--color-success);">5/5</span>
+              </div>
+              <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 6px;">
+                <span style="font-size: 11px; color: var(--brand-gray); width: 50px;">営業系</span>
+                <div style="flex: 1; height: 6px; background: var(--brand-border); border-radius: 3px; overflow: hidden;">
+                  <div style="width: 80%; height: 100%; background: var(--brand-orange); border-radius: 3px;"></div>
+                </div>
+                <span style="font-size: 11px; font-weight: 600; color: var(--brand-orange);">4/5</span>
+              </div>
+              <div style="display: flex; align-items: center; gap: 8px;">
+                <span style="font-size: 11px; color: var(--brand-gray); width: 50px;">管理系</span>
+                <div style="flex: 1; height: 6px; background: var(--brand-border); border-radius: 3px; overflow: hidden;">
+                  <div style="width: 60%; height: 100%; background: var(--brand-orange); border-radius: 3px;"></div>
+                </div>
+                <span style="font-size: 11px; font-weight: 600; color: var(--brand-orange);">3/5</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ===== ダッシュボード：評価者 ===== -->
+    <div class="page" id="page-dashboard-evaluator">
+      <div class="top-bar">
+        <div>
+          <h1>ようこそ、松坂 直樹さん</h1>
+          <p style="font-size:14px; color:var(--brand-gray); margin-top:2px;">スタジオリーダー — 2026年度 上期</p>
+        </div>
+      </div>
+
+      <h3 style="font-size:15px; font-weight:700; margin-bottom:12px;">👥 配下メンバーの進捗（4名）</h3>
+      <div class="card" style="margin-bottom:20px;">
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>名前</th><th>職種</th><th>目標設定</th><th>評価入力</th><th>ステータス</th><th></th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td style="font-weight:600;">田中 太郎</td><td>設計営業</td>
+                <td><span style="color:var(--color-success);">✅ 完了</span></td>
+                <td><span style="color:var(--brand-orange);">⏳ 入力中</span></td>
+                <td><span class="badge badge-progress">入力中</span></td>
+                <td><button class="btn btn-ghost btn-sm" data-page="eval-edit">編集 →</button></td>
+              </tr>
+              <tr>
+                <td style="font-weight:600;">鈴木 花子</td><td>IC</td>
+                <td><span style="color:var(--color-success);">✅ 完了</span></td>
+                <td><span style="color:var(--brand-gray);">❌ 未着手</span></td>
+                <td><span class="badge badge-draft">目標確定</span></td>
+                <td><button class="btn btn-ghost btn-sm" data-page="eval-edit">開始 →</button></td>
+              </tr>
+              <tr>
+                <td style="font-weight:600;">佐藤 一郎</td><td>設計営業</td>
+                <td><span style="color:var(--color-warning);">⚠ 未提出</span></td>
+                <td><span style="color:var(--brand-gray);">——</span></td>
+                <td><span class="badge badge-warning">目標設定中</span></td>
+                <td><button class="btn btn-ghost btn-sm">催促 →</button></td>
+              </tr>
+              <tr>
+                <td style="font-weight:600;">山田 美咲</td><td>現場監督</td>
+                <td><span style="color:var(--color-success);">✅ 完了</span></td>
+                <td><span style="color:var(--color-success);">✅ 完了</span></td>
+                <td><span class="badge badge-submitted">提出済</span></td>
+                <td><button class="btn btn-ghost btn-sm" data-page="eval-view">確認 →</button></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <h3 style="font-size:15px; font-weight:700; margin-bottom:12px;">📌 やるべきこと</h3>
+      <div class="task-card">
+        <div class="task-icon warning">⚠️</div>
+        <div class="task-body">
+          <div class="label">佐藤一郎の目標設定を催促</div>
+          <div class="desc">締切まであと5日</div>
+        </div>
+        <span class="task-arrow">→</span>
+      </div>
+      <div class="task-card">
+        <div class="task-icon info">👥</div>
+        <div class="task-body">
+          <div class="label">田中太郎の360度評価者を選出</div>
+          <div class="desc">3名の評価者を割り当ててください</div>
+        </div>
+        <span class="task-arrow">→</span>
+      </div>
+      <div class="task-card">
+        <div class="task-icon success">📋</div>
+        <div class="task-body">
+          <div class="label">鈴木花子の評価入力を開始</div>
+          <div class="desc">目標が確定しました</div>
+        </div>
+        <span class="task-arrow">→</span>
+      </div>
+    </div>
+
+    <!-- ===== ダッシュボード：管理者 ===== -->
+    <div class="page" id="page-dashboard-admin">
+      <div class="top-bar">
+        <div>
+          <h1>全社評価進捗</h1>
+          <p style="font-size:14px; color:var(--brand-gray); margin-top:2px;">2026年度 上期</p>
+        </div>
+        <div class="top-bar-actions">
+          <button class="btn btn-outline btn-sm" data-page="import-bonus">📥 賞与データ取込</button>
+          <button class="btn btn-outline btn-sm" data-page="admin-overview">📤 CSVエクスポート</button>
+          <button class="btn btn-primary btn-sm" data-page="period-manage">📅 期間管理</button>
+        </div>
+      </div>
+
+      <div class="stats-grid" style="grid-template-columns: repeat(4, 1fr);">
+        <div class="stat-card">
+          <div class="stat-value">160</div>
+          <div class="stat-label">全社員数</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-value green">120</div>
+          <div class="stat-label">目標設定完了</div>
+          <div class="stat-bar"><div class="stat-bar-fill" style="width:75%; background:var(--color-success)"></div></div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-value orange">45</div>
+          <div class="stat-label">評価入力完了</div>
+          <div class="stat-bar"><div class="stat-bar-fill" style="width:28%"></div></div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-value" style="color:var(--color-info);">30</div>
+          <div class="stat-label">360度回答完了</div>
+          <div class="stat-bar"><div class="stat-bar-fill" style="width:19%; background:var(--color-info)"></div></div>
+        </div>
+      </div>
+
+      <div class="grid-2" style="margin-bottom:20px;">
+        <div class="card">
+          <div class="card-header">
+            <span class="card-title">📊 フェーズ別進捗</span>
+          </div>
+          <div class="card-content">
+            <div class="progress-row">
+              <span class="progress-label">目標設定</span>
+              <div class="progress-bar"><div class="progress-fill green" style="width:75%"></div></div>
+              <span class="progress-num">75%</span>
+            </div>
+            <div class="progress-row">
+              <span class="progress-label">評価入力</span>
+              <div class="progress-bar"><div class="progress-fill orange" style="width:28%"></div></div>
+              <span class="progress-num">28%</span>
+            </div>
+            <div class="progress-row">
+              <span class="progress-label">360度</span>
+              <div class="progress-bar"><div class="progress-fill blue" style="width:19%"></div></div>
+              <span class="progress-num">19%</span>
+            </div>
+            <div class="progress-row">
+              <span class="progress-label">確定済</span>
+              <div class="progress-bar"><div class="progress-fill green" style="width:5%"></div></div>
+              <span class="progress-num">5%</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-header">
+            <span class="card-title">⚠ 注意が必要</span>
+          </div>
+          <div class="card-content">
+            <div class="task-card" style="margin-bottom:6px;">
+              <div class="task-icon warning">⚠️</div>
+              <div class="task-body">
+                <div class="label">目標未提出: 15名</div>
+              </div>
+              <span class="task-arrow">→</span>
+            </div>
+            <div class="task-card" style="margin-bottom:6px;">
+              <div class="task-icon" style="background:var(--color-error-bg);">❌</div>
+              <div class="task-body">
+                <div class="label">評価未着手: 35名</div>
+              </div>
+              <span class="task-arrow">→</span>
+            </div>
+            <div class="task-card">
+              <div class="task-icon info">🔔</div>
+              <div class="task-body">
+                <div class="label">360度回答待ち: 80名</div>
+              </div>
+              <span class="task-arrow">→</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ===== 評価一覧 ===== -->
+    <div class="page" id="page-eval-list">
+      <div class="top-bar">
+        <h1>評価シート一覧</h1>
+        <button class="btn btn-primary" data-page="eval-new">+ 新規作成</button>
+      </div>
+
+      <div style="display:flex; gap:8px; margin-bottom:16px; flex-wrap:wrap;">
+        <select class="form-input" style="width:auto; min-width:140px;">
+          <option>全ステータス</option>
+          <option>下書き</option>
+          <option>入力中</option>
+          <option>提出済</option>
+          <option>確定</option>
+        </select>
+        <select class="form-input" style="width:auto; min-width:140px;">
+          <option>全職種</option>
+          <option>設計営業</option>
+          <option>IC</option>
+          <option>現場監督</option>
+        </select>
+        <input class="form-input" placeholder="名前で検索..." style="width:auto; min-width:200px;">
+      </div>
+
+      <div class="card">
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>社員名</th><th>職種</th><th>等級</th><th>評価期間</th><th>ステータス</th><th>更新日</th><th></th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr onclick="showPage('eval-edit')" style="cursor:pointer;">
+                <td style="font-weight:600;">松坂 直樹</td><td>設計営業</td><td>Lv.4-2</td>
+                <td>2026年度 上期</td>
+                <td><span class="badge badge-progress">入力中</span></td>
+                <td style="color:var(--brand-gray); font-size:13px;">3/10</td>
+                <td><button class="btn btn-ghost btn-sm" data-page="eval-edit">編集 →</button></td>
+              </tr>
+              <tr style="cursor:pointer;" data-page="eval-edit">
+                <td style="font-weight:600;">田中 太郎</td><td>設計営業</td><td>Lv.2-1</td>
+                <td>2026年度 上期</td>
+                <td><span class="badge badge-draft">下書き</span></td>
+                <td style="color:var(--brand-gray); font-size:13px;">3/8</td>
+                <td><button class="btn btn-ghost btn-sm" data-page="eval-edit">編集 →</button></td>
+              </tr>
+              <tr style="cursor:pointer;" data-page="eval-view">
+                <td style="font-weight:600;">鈴木 花子</td><td>IC</td><td>Lv.3-1</td>
+                <td>2026年度 上期</td>
+                <td><span class="badge badge-submitted">提出済</span></td>
+                <td style="color:var(--brand-gray); font-size:13px;">3/5</td>
+                <td><button class="btn btn-ghost btn-sm" data-page="eval-view">確認 →</button></td>
+              </tr>
+              <tr style="cursor:pointer;" data-page="eval-view">
+                <td style="font-weight:600;">山田 美咲</td><td>現場監督</td><td>Lv.2-2</td>
+                <td>2026年度 上期</td>
+                <td><span class="badge badge-finalized">確定</span></td>
+                <td style="color:var(--brand-gray); font-size:13px;">3/1</td>
+                <td><button class="btn btn-ghost btn-sm" data-page="eval-view">閲覧 →</button></td>
+              </tr>
+              <tr style="cursor:pointer;" data-page="eval-view">
+                <td style="font-weight:600;">佐藤 一郎</td><td>設計営業</td><td>Lv.1-1</td>
+                <td>2025年度 下期</td>
+                <td><span class="badge badge-finalized">確定</span></td>
+                <td style="color:var(--brand-gray); font-size:13px;">2/28</td>
+                <td><button class="btn btn-ghost btn-sm" data-page="eval-view">閲覧 →</button></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- ===== 評価シート編集 ===== -->
+    <div class="page" id="page-eval-edit">
+      <div class="top-bar">
+        <div>
+          <div style="display:flex; align-items:center; gap:12px;">
+            <button class="btn btn-ghost" style="padding:4px 8px;" onclick="showPage('eval-list')">← 戻る</button>
+            <h1>松坂 直樹の評価シート</h1>
+          </div>
+          <p style="font-size:14px; color:var(--brand-gray); margin-top:2px;">設計営業 / Lv.4-2 / 2026年度 上期</p>
+        </div>
+        <div class="top-bar-actions">
+          <span class="badge badge-progress">入力中</span>
+          <div class="autosave">
+            <span class="autosave-dot"></span>
+            自動保存済み
+          </div>
+        </div>
+      </div>
+
+      <div class="tabs">
+        <div class="tab active">基本情報</div>
+        <div class="tab">目標設定</div>
+        <div class="tab">成果評価</div>
+        <div class="tab">Leader Radar</div>
+        <div class="tab">能力評価</div>
+        <div class="tab">行動評価</div>
+        <div class="tab">チェックリスト</div>
+        <div class="tab">総評</div>
+        <div class="tab">賞与情報</div>
+      </div>
+
+      <div class="grid-2">
+        <div class="card">
+          <div class="card-header"><span class="card-title">基本情報</span></div>
+          <div class="card-content">
+            <div class="form-group">
+              <label class="form-label">社員名</label>
+              <div style="font-size:16px; font-weight:600;">松坂 直樹</div>
+            </div>
+            <div class="form-group">
+              <label class="form-label">職種</label>
+              <div>設計営業</div>
+            </div>
+            <div class="form-group">
+              <label class="form-label">評価時等級</label>
+              <div>Lv.4-2</div>
+            </div>
+            <div class="form-group">
+              <label class="form-label">所属</label>
+              <div>スタジオA</div>
+            </div>
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-header"><span class="card-title">評価サマリー</span></div>
+          <div class="card-content">
+            <div class="form-group">
+              <label class="form-label">能力評価平均</label>
+              <div style="font-size:20px; font-weight:800; color:var(--brand-orange);">3.80 <span style="font-size:14px; font-weight:400; color:var(--brand-gray);">/ 5.00</span></div>
+            </div>
+            <div class="form-group">
+              <label class="form-label">行動評価合計</label>
+              <div style="font-size:20px; font-weight:800; color:var(--color-success);">24 <span style="font-size:14px; font-weight:400; color:var(--brand-gray);">/ 32 (ステップアップ条件✅)</span></div>
+            </div>
+            <div class="form-group">
+              <label class="form-label">役職係数</label>
+              <div style="font-size:20px; font-weight:800; color:var(--brand-olive);">1.37</div>
+            </div>
+            <div class="form-group">
+              <label class="form-label">チェックリスト</label>
+              <div>12 / 15 完了</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div style="display:flex; gap:8px; justify-content:flex-end; margin-top:20px;">
+        <button class="btn btn-outline">下書き保存</button>
+        <button class="btn btn-primary">提出する →</button>
+      </div>
+    </div>
+
+    <!-- ===== 能力評価タブ ===== -->
+    <div class="page" id="page-eval-ability">
+      <div class="top-bar">
+        <div>
+          <div style="display:flex; align-items:center; gap:12px;">
+            <button class="btn btn-ghost" style="padding:4px 8px;" onclick="showPage('eval-edit')">← 戻る</button>
+            <h1>松坂 直樹の評価シート</h1>
+          </div>
+          <p style="font-size:14px; color:var(--brand-gray); margin-top:2px;">設計営業 / Lv.4-2 / 2026年度 上期</p>
+        </div>
+        <div class="top-bar-actions">
+          <span class="badge badge-progress">入力中</span>
+          <div class="autosave"><span class="autosave-dot"></span>自動保存済み</div>
+        </div>
+      </div>
+
+      <div class="tabs">
+        <div class="tab">基本情報</div>
+        <div class="tab">目標設定</div>
+        <div class="tab">成果評価</div>
+        <div class="tab">Leader Radar</div>
+        <div class="tab active">能力評価</div>
+        <div class="tab">行動評価</div>
+        <div class="tab">チェックリスト</div>
+        <div class="tab">総評</div>
+        <div class="tab">賞与情報</div>
+      </div>
+
+      <div class="card">
+        <div class="card-header">
+          <span class="card-title">📊 能力評価（Lv.4の基準で評価）</span>
+        </div>
+        <div class="card-content">
+          <p style="font-size:13px; color:var(--brand-gray); margin-bottom:20px;">各項目について1〜5のスコアで評価してください。スコアを選択すると基準文が表示されます。</p>
+
+          <!-- 項目1 -->
+          <div style="margin-bottom:24px;">
+            <div style="font-size:15px; font-weight:700; margin-bottom:8px;">❶ 経験値</div>
+            <div class="score-buttons">
+              <button class="score-btn">1</button>
+              <button class="score-btn">2</button>
+              <button class="score-btn">3</button>
+              <button class="score-btn selected">4</button>
+              <button class="score-btn">5</button>
+            </div>
+            <div class="tooltip-box">
+              <strong>スコア4:</strong> 多様な案件を経験し、特殊な条件（変形地、3階建て、二世帯等）でも適切に対応できる実績がある。後輩への助言も行えるレベル。
+            </div>
+          </div>
+
+          <!-- 項目2 -->
+          <div style="margin-bottom:24px;">
+            <div style="font-size:15px; font-weight:700; margin-bottom:8px;">❷ 設計力</div>
+            <div class="score-buttons">
+              <button class="score-btn">1</button>
+              <button class="score-btn">2</button>
+              <button class="score-btn">3</button>
+              <button class="score-btn">4</button>
+              <button class="score-btn selected">5</button>
+            </div>
+            <div class="tooltip-box">
+              <strong>スコア5:</strong> 複雑な設計でも独自の創意工夫で高品質な提案ができる。社内の設計レビューをリードし、部門全体の設計品質向上に貢献している。
+            </div>
+          </div>
+
+          <!-- 項目3 -->
+          <div style="margin-bottom:24px;">
+            <div style="font-size:15px; font-weight:700; margin-bottom:8px;">❸ 顧客対応力</div>
+            <div class="score-buttons">
+              <button class="score-btn">1</button>
+              <button class="score-btn">2</button>
+              <button class="score-btn selected">3</button>
+              <button class="score-btn">4</button>
+              <button class="score-btn">5</button>
+            </div>
+            <div class="tooltip-box">
+              <strong>スコア3:</strong> 顧客の要望を正確に理解し、適切なヒアリングと提案ができる。クレーム対応も概ね自力で解決できる。
+            </div>
+          </div>
+
+          <!-- 項目4 -->
+          <div style="margin-bottom:24px;">
+            <div style="font-size:15px; font-weight:700; margin-bottom:8px;">❹ 業務推進力</div>
+            <div class="score-buttons">
+              <button class="score-btn">1</button>
+              <button class="score-btn">2</button>
+              <button class="score-btn">3</button>
+              <button class="score-btn selected">4</button>
+              <button class="score-btn">5</button>
+            </div>
+          </div>
+
+          <!-- 項目5 -->
+          <div style="margin-bottom:24px;">
+            <div style="font-size:15px; font-weight:700; margin-bottom:8px;">❺ 自己成長</div>
+            <div class="score-buttons">
+              <button class="score-btn">1</button>
+              <button class="score-btn">2</button>
+              <button class="score-btn selected">3</button>
+              <button class="score-btn">4</button>
+              <button class="score-btn">5</button>
+            </div>
+          </div>
+
+          <div class="result-box">
+            <div class="result-label">能力評価平均</div>
+            <div class="result-value">3.80 <span style="font-size:16px; font-weight:400; color:var(--brand-gray);">/ 5.00</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ===== 行動評価タブ ===== -->
+    <div class="page" id="page-eval-behavior">
+      <div class="top-bar">
+        <div>
+          <div style="display:flex; align-items:center; gap:12px;">
+            <button class="btn btn-ghost" style="padding:4px 8px;" onclick="showPage('eval-edit')">← 戻る</button>
+            <h1>松坂 直樹の評価シート</h1>
+          </div>
+          <p style="font-size:14px; color:var(--brand-gray); margin-top:2px;">設計営業 / Lv.4-2 / 2026年度 上期</p>
+        </div>
+        <div class="top-bar-actions">
+          <span class="badge badge-progress">入力中</span>
+          <div class="autosave"><span class="autosave-dot"></span>自動保存済み</div>
+        </div>
+      </div>
+
+      <div class="tabs">
+        <div class="tab">基本情報</div>
+        <div class="tab">目標設定</div>
+        <div class="tab">成果評価</div>
+        <div class="tab">Leader Radar</div>
+        <div class="tab">能力評価</div>
+        <div class="tab active">行動評価</div>
+        <div class="tab">チェックリスト</div>
+        <div class="tab">総評</div>
+        <div class="tab">賞与情報</div>
+      </div>
+
+      <div class="card">
+        <div class="card-header">
+          <span class="card-title">🤝 行動評価（360度評価結果）</span>
+          <button class="btn btn-outline btn-sm" data-page="eval-behavior">評価者を変更</button>
+        </div>
+        <div class="card-content">
+          <p style="font-size:13px; color:var(--brand-gray); margin-bottom:4px;">360度評価者: <strong>A: ●●●</strong>　<strong>B: ●●●</strong>　<strong>C: ●●●</strong></p>
+          <p style="font-size:12px; color:var(--brand-gray); margin-bottom:16px;">※ A,B,C列は被評価者には非表示。最終評価のみ面談時に開示。</p>
+
+          <div class="table-wrap">
+            <table>
+              <thead>
+                <tr>
+                  <th>項目</th><th style="text-align:center;">ウェイト</th><th style="text-align:center;">A</th><th style="text-align:center;">B</th><th style="text-align:center;">C</th><th style="text-align:center;">平均</th><th style="text-align:center;">最終評価</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>① 笑顔/挨拶</td><td style="text-align:center;">×1</td><td style="text-align:center;">3</td><td style="text-align:center;">4</td><td style="text-align:center;">3</td><td style="text-align:center; font-weight:600;">3.33</td>
+                  <td style="text-align:center;"><select class="form-input" style="width:60px; padding:4px 6px; font-size:13px;"><option>3</option><option>4</option><option>2</option><option>1</option></select></td>
+                </tr>
+                <tr>
+                  <td>② 発言/提案</td><td style="text-align:center;">×1</td><td style="text-align:center;">2</td><td style="text-align:center;">3</td><td style="text-align:center;">3</td><td style="text-align:center; font-weight:600;">2.67</td>
+                  <td style="text-align:center;"><select class="form-input" style="width:60px; padding:4px 6px; font-size:13px;"><option>3</option><option>2</option><option>4</option><option>1</option></select></td>
+                </tr>
+                <tr>
+                  <td>③ 身だしなみ</td><td style="text-align:center;">×1</td><td style="text-align:center;">4</td><td style="text-align:center;">4</td><td style="text-align:center;">3</td><td style="text-align:center; font-weight:600;">3.67</td>
+                  <td style="text-align:center;"><select class="form-input" style="width:60px; padding:4px 6px; font-size:13px;"><option>4</option><option>3</option><option>2</option><option>1</option></select></td>
+                </tr>
+                <tr>
+                  <td>④ 判断/行動</td><td style="text-align:center;">×1</td><td style="text-align:center;">3</td><td style="text-align:center;">3</td><td style="text-align:center;">3</td><td style="text-align:center; font-weight:600;">3.00</td>
+                  <td style="text-align:center;"><select class="form-input" style="width:60px; padding:4px 6px; font-size:13px;"><option>3</option><option>4</option><option>2</option><option>1</option></select></td>
+                </tr>
+                <tr>
+                  <td>⑤ 連携</td><td style="text-align:center;">×1</td><td style="text-align:center;">3</td><td style="text-align:center;">4</td><td style="text-align:center;">4</td><td style="text-align:center; font-weight:600;">3.67</td>
+                  <td style="text-align:center;"><select class="form-input" style="width:60px; padding:4px 6px; font-size:13px;"><option>4</option><option>3</option><option>2</option><option>1</option></select></td>
+                </tr>
+                <tr>
+                  <td>⑥ 支援/サポート</td><td style="text-align:center;">×1</td><td style="text-align:center;">2</td><td style="text-align:center;">3</td><td style="text-align:center;">2</td><td style="text-align:center; font-weight:600;">2.33</td>
+                  <td style="text-align:center;"><select class="form-input" style="width:60px; padding:4px 6px; font-size:13px;"><option>2</option><option>3</option><option>4</option><option>1</option></select></td>
+                </tr>
+                <tr>
+                  <td>⑦ 学習/成長</td><td style="text-align:center;">×1</td><td style="text-align:center;">3</td><td style="text-align:center;">3</td><td style="text-align:center;">3</td><td style="text-align:center; font-weight:600;">3.00</td>
+                  <td style="text-align:center;"><select class="form-input" style="width:60px; padding:4px 6px; font-size:13px;"><option>3</option><option>4</option><option>2</option><option>1</option></select></td>
+                </tr>
+                <tr>
+                  <td>⑧ 自己管理</td><td style="text-align:center;">×1</td><td style="text-align:center;">3</td><td style="text-align:center;">4</td><td style="text-align:center;">3</td><td style="text-align:center; font-weight:600;">3.33</td>
+                  <td style="text-align:center;"><select class="form-input" style="width:60px; padding:4px 6px; font-size:13px;"><option>3</option><option>4</option><option>2</option><option>1</option></select></td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+          <div class="result-box" style="display:flex; align-items:center; justify-content:space-between;">
+            <div>
+              <div class="result-label">行動評価合計</div>
+              <div class="result-value">25 <span style="font-size:16px; font-weight:400; color:var(--brand-gray);">/ 32点</span></div>
+            </div>
+            <span class="badge badge-finalized" style="font-size:14px; padding:6px 16px;">✅ ステップアップ条件クリア（22点以上）</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ===== Leader Radar ===== -->
+    <div class="page" id="page-eval-leader">
+      <div class="top-bar">
+        <div>
+          <div style="display:flex; align-items:center; gap:12px;">
+            <button class="btn btn-ghost" style="padding:4px 8px;" onclick="showPage('eval-edit')">← 戻る</button>
+            <h1>松坂 直樹の評価シート</h1>
+          </div>
+          <p style="font-size:14px; color:var(--brand-gray); margin-top:2px;">設計営業 / Lv.4-2 / 2026年度 上期</p>
+        </div>
+        <div class="top-bar-actions">
+          <span class="badge badge-progress">入力中</span>
+          <div class="autosave"><span class="autosave-dot"></span>自動保存済み</div>
+        </div>
+      </div>
+
+      <div class="tabs">
+        <div class="tab">基本情報</div>
+        <div class="tab">目標設定</div>
+        <div class="tab">成果評価</div>
+        <div class="tab active">Leader Radar</div>
+        <div class="tab">能力評価</div>
+        <div class="tab">行動評価</div>
+        <div class="tab">チェックリスト</div>
+        <div class="tab">総評</div>
+        <div class="tab">賞与情報</div>
+      </div>
+
+      <div class="card">
+        <div class="card-header">
+          <span class="card-title">🎯 Leader Radar（スタジオリーダー）</span>
+        </div>
+        <div class="card-content">
+          <p style="font-size:13px; color:var(--brand-gray); margin-bottom:24px;">各項目のランクを選択し、係数を0.1刻みで入力してください。</p>
+
+          <!-- 項目1 -->
+          <div style="margin-bottom:28px; padding:16px; background:var(--brand-warm-white); border-radius:var(--radius);">
+            <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:8px;">
+              <div style="font-size:15px; font-weight:700;">❶ 組織成果</div>
+              <span class="badge badge-draft">ウェイト 40%</span>
+            </div>
+            <p style="font-size:13px; color:var(--brand-gray); margin-bottom:12px;">指標: スタジオ仮契約数目標の達成率</p>
+            <div style="display:flex; align-items:center; gap:20px;">
+              <div>
+                <label class="form-label">ランク</label>
+                <div class="rank-group">
+                  <button class="rank-btn">S</button>
+                  <button class="rank-btn selected">A</button>
+                  <button class="rank-btn">B</button>
+                  <button class="rank-btn">C</button>
+                  <button class="rank-btn">D</button>
+                </div>
+              </div>
+              <div>
+                <label class="form-label">係数</label>
+                <input class="form-input" type="number" value="0.4" step="0.1" min="0" max="1.5" style="width:100px;">
+              </div>
+            </div>
+          </div>
+
+          <!-- 項目2 -->
+          <div style="margin-bottom:28px; padding:16px; background:var(--brand-warm-white); border-radius:var(--radius);">
+            <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:8px;">
+              <div style="font-size:15px; font-weight:700;">❷ リーダーシップ</div>
+              <span class="badge badge-draft">ウェイト 30%</span>
+            </div>
+            <div style="display:flex; align-items:center; gap:20px;">
+              <div>
+                <label class="form-label">ランク</label>
+                <div class="rank-group">
+                  <button class="rank-btn">S</button>
+                  <button class="rank-btn">A</button>
+                  <button class="rank-btn selected">B</button>
+                  <button class="rank-btn">C</button>
+                  <button class="rank-btn">D</button>
+                </div>
+              </div>
+              <div>
+                <label class="form-label">係数</label>
+                <input class="form-input" type="number" value="0.3" step="0.1" min="0" max="1.5" style="width:100px;">
+              </div>
+            </div>
+          </div>
+
+          <!-- 項目3 -->
+          <div style="margin-bottom:28px; padding:16px; background:var(--brand-warm-white); border-radius:var(--radius);">
+            <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:8px;">
+              <div style="font-size:15px; font-weight:700;">❸ 育成貢献</div>
+              <span class="badge badge-draft">ウェイト 30%</span>
+            </div>
+            <div style="display:flex; align-items:center; gap:20px;">
+              <div>
+                <label class="form-label">ランク</label>
+                <div class="rank-group">
+                  <button class="rank-btn">S</button>
+                  <button class="rank-btn selected">A</button>
+                  <button class="rank-btn">B</button>
+                  <button class="rank-btn">C</button>
+                  <button class="rank-btn">D</button>
+                </div>
+              </div>
+              <div>
+                <label class="form-label">係数</label>
+                <input class="form-input" type="number" value="0.4" step="0.1" min="0" max="1.5" style="width:100px;">
+              </div>
+            </div>
+          </div>
+
+          <div class="result-box">
+            <div style="display:flex; align-items:center; justify-content:space-between;">
+              <div>
+                <div class="result-label">役職係数</div>
+                <div class="result-value">1.37</div>
+              </div>
+              <div style="font-size:13px; color:var(--brand-olive); text-align:right; line-height:1.6;">
+                1.0 + (0.4 × 0.4) + (0.3 × 0.3) + (0.4 × 0.3)<br>
+                = 1.0 + 0.16 + 0.09 + 0.12 = <strong>1.37</strong><br>
+                <span style="color:var(--brand-gray);">賞与計算: 個人賞与 × 1.37</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ===== 社員一覧 ===== -->
+    <div class="page" id="page-employees">
+      <div class="top-bar">
+        <h1>社員一覧</h1>
+        <div class="top-bar-actions">
+          <button class="btn btn-outline btn-sm" data-page="employees">📥 CSVインポート</button>
+          <button class="btn btn-outline btn-sm" data-page="employees">📤 CSV出力</button>
+        </div>
+      </div>
+
+      <div style="display:flex; gap:8px; margin-bottom:16px; flex-wrap:wrap;">
+        <input class="form-input" placeholder="名前で検索..." style="width:auto; min-width:200px;">
+        <select class="form-input" style="width:auto; min-width:120px;">
+          <option>全職種</option>
+          <option>設計営業</option>
+          <option>IC</option>
+          <option>現場監督</option>
+          <option>実施設計</option>
+          <option>保育士</option>
+          <option>マーケティング</option>
+          <option>人事</option>
+        </select>
+        <select class="form-input" style="width:auto; min-width:120px;">
+          <option>全所属</option>
+          <option>スタジオA</option>
+          <option>スタジオB</option>
+          <option>スタジオC</option>
+        </select>
+      </div>
+
+      <div class="card">
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>#</th><th>名前</th><th>職種</th><th>等級</th><th>役職</th><th>所属</th><th>入社年度</th><th></th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr class="emp-row" data-emp="matsuzaka" style="cursor:pointer;">
+                <td>1</td><td style="font-weight:600;">松坂 直樹</td><td>設計営業</td><td>Lv.4-2</td><td>SL</td><td>スタジオA</td><td>2015</td>
+                <td><button class="btn btn-ghost btn-sm">詳細 →</button></td>
+              </tr>
+              <tr class="emp-row" data-emp="tanaka" style="cursor:pointer;">
+                <td>2</td><td style="font-weight:600;">田中 太郎</td><td>設計営業</td><td>Lv.2-1</td><td>—</td><td>スタジオA</td><td>2020</td>
+                <td><button class="btn btn-ghost btn-sm">詳細 →</button></td>
+              </tr>
+              <tr class="emp-row" data-emp="suzuki" style="cursor:pointer;">
+                <td>3</td><td style="font-weight:600;">鈴木 花子</td><td>IC</td><td>Lv.3-1</td><td>—</td><td>スタジオA</td><td>2018</td>
+                <td><button class="btn btn-ghost btn-sm">詳細 →</button></td>
+              </tr>
+              <tr class="emp-row" data-emp="sato" style="cursor:pointer;">
+                <td>4</td><td style="font-weight:600;">佐藤 一郎</td><td>実施設計</td><td>Lv.2-2</td><td>—</td><td>スタジオB</td><td>2022</td>
+                <td><button class="btn btn-ghost btn-sm">詳細 →</button></td>
+              </tr>
+              <tr class="emp-row" data-emp="yamada" style="cursor:pointer;">
+                <td>5</td><td style="font-weight:600;">山田 美咲</td><td>現場監督</td><td>Lv.2-2</td><td>—</td><td>スタジオB</td><td>2019</td>
+                <td><button class="btn btn-ghost btn-sm">詳細 →</button></td>
+              </tr>
+              <tr class="emp-row" data-emp="takahashi" style="cursor:pointer;">
+                <td>6</td><td style="font-weight:600;">高橋 裕子</td><td>保育士</td><td>Lv.2-1</td><td>—</td><td>キッズ</td><td>2021</td>
+                <td><button class="btn btn-ghost btn-sm">詳細 →</button></td>
+              </tr>
+              <tr class="emp-row" data-emp="ito" style="cursor:pointer;">
+                <td>7</td><td style="font-weight:600;">伊藤 健太</td><td>マーケティング</td><td>Lv.3-1</td><td>—</td><td>本部</td><td>2017</td>
+                <td><button class="btn btn-ghost btn-sm">詳細 →</button></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <div style="padding:12px 20px; border-top:1px solid var(--brand-border); display:flex; justify-content:space-between; align-items:center;">
+          <span style="font-size:13px; color:var(--brand-gray);">全160名 / 表示: 1-20</span>
+          <div style="display:flex; gap:4px;">
+            <button class="btn btn-ghost btn-sm" disabled>← 前へ</button>
+            <button class="btn btn-ghost btn-sm" data-page="employees">次へ →</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ===== 目標設定タブ ===== -->
+    <div class="page" id="page-eval-goal">
+      <div class="top-bar">
+        <div>
+          <div style="display:flex; align-items:center; gap:12px;">
+            <button class="btn btn-ghost" style="padding:4px 8px;" onclick="showPage('eval-edit')">← 戻る</button>
+            <h1>松坂 直樹の評価シート</h1>
+          </div>
+          <p style="font-size:14px; color:var(--brand-gray); margin-top:2px;">設計営業 / Lv.4-2 / 2026年度 上期</p>
+        </div>
+        <div class="top-bar-actions">
+          <span class="badge badge-progress">入力中</span>
+          <div class="autosave"><span class="autosave-dot"></span>自動保存済み</div>
+        </div>
+      </div>
+
+      <div class="tabs">
+        <div class="tab">基本情報</div>
+        <div class="tab active">目標設定</div>
+        <div class="tab">成果評価</div>
+        <div class="tab">Leader Radar</div>
+        <div class="tab">能力評価</div>
+        <div class="tab">行動評価</div>
+        <div class="tab">チェックリスト</div>
+        <div class="tab">総評</div>
+        <div class="tab">賞与情報</div>
+      </div>
+
+      <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:16px;">
+        <h3 style="font-size:16px; font-weight:700;">🎯 目標設定</h3>
+        <span class="badge badge-finalized">確定済 🔒</span>
+      </div>
+
+      <div class="grid-2" style="margin-bottom:20px;">
+        <!-- 能力目標 -->
+        <div class="card">
+          <div class="card-header"><span class="card-title">能力目標</span></div>
+          <div class="card-content">
+            <div class="form-group">
+              <label class="form-label">注力する能力項目</label>
+              <div style="display:flex; flex-wrap:wrap; gap:6px;">
+                <span style="background:var(--brand-orange-light); border:1px solid var(--brand-orange); color:var(--brand-orange-dark); padding:3px 10px; border-radius:12px; font-size:12px; font-weight:600;">①経験値</span>
+                <span style="background:var(--brand-orange-light); border:1px solid var(--brand-orange); color:var(--brand-orange-dark); padding:3px 10px; border-radius:12px; font-size:12px; font-weight:600;">③顧客対応力</span>
+              </div>
+            </div>
+            <div class="form-group">
+              <label class="form-label">定性目標</label>
+              <div style="background:var(--brand-warm-white); border:1px solid var(--brand-border); border-radius:6px; padding:10px 12px; font-size:14px; color:var(--brand-charcoal);">
+                後輩の設計レビューを主導し、チーム全体の設計品質を底上げする
+              </div>
+            </div>
+            <div class="form-group">
+              <label class="form-label">具体的行動</label>
+              <div style="background:var(--brand-warm-white); border:1px solid var(--brand-border); border-radius:6px; padding:10px 12px; font-size:14px; color:var(--brand-charcoal); line-height:1.7;">
+                ・週1で後輩の図面レビューを実施<br>
+                ・月1で設計ナレッジ共有会を企画
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- 成果目標 -->
+        <div class="card">
+          <div class="card-header"><span class="card-title">成果目標</span></div>
+          <div class="card-content">
+            <div style="display:grid; grid-template-columns:1fr 1fr; gap:12px; margin-bottom:16px;">
+              <div style="background:var(--brand-warm-white); border-radius:8px; padding:12px; text-align:center;">
+                <div style="font-size:11px; color:var(--brand-gray);">完工数</div>
+                <div style="font-size:22px; font-weight:800; color:var(--brand-charcoal);">12<span style="font-size:13px; font-weight:400;">棟</span></div>
+              </div>
+              <div style="background:var(--brand-warm-white); border-radius:8px; padding:12px; text-align:center;">
+                <div style="font-size:11px; color:var(--brand-gray);">平均粗利率</div>
+                <div style="font-size:22px; font-weight:800; color:var(--brand-charcoal);">28.0<span style="font-size:13px; font-weight:400;">%</span></div>
+              </div>
+              <div style="background:var(--brand-warm-white); border-radius:8px; padding:12px; text-align:center;">
+                <div style="font-size:11px; color:var(--brand-gray);">仮契約数</div>
+                <div style="font-size:22px; font-weight:800; color:var(--brand-charcoal);">15<span style="font-size:13px; font-weight:400;">件</span></div>
+              </div>
+            </div>
+            <div class="form-group">
+              <label class="form-label">今期の取り組み</label>
+              <div style="background:var(--brand-warm-white); border:1px solid var(--brand-border); border-radius:6px; padding:10px 12px; font-size:14px;">
+                初回接客時のヒアリング精度を上げ、2回目提案での仮契約率を向上させる
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 評価者コメント -->
+      <div class="card">
+        <div class="card-header"><span class="card-title">評価者コメント</span><span class="badge badge-draft">評価者のみ編集可</span></div>
+        <div class="card-content">
+          <textarea class="form-input" placeholder="目標に対するコメントを入力..."></textarea>
+          <div style="text-align:right; margin-top:8px;"><button class="btn btn-primary btn-sm">目標を確定する 🔒</button></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ===== 成果評価タブ ===== -->
+    <div class="page" id="page-eval-result">
+      <div class="top-bar">
+        <div>
+          <div style="display:flex; align-items:center; gap:12px;">
+            <button class="btn btn-ghost" style="padding:4px 8px;" onclick="showPage('eval-edit')">← 戻る</button>
+            <h1>松坂 直樹の評価シート</h1>
+          </div>
+          <p style="font-size:14px; color:var(--brand-gray); margin-top:2px;">設計営業 / Lv.4-2 / 2026年度 上期</p>
+        </div>
+        <div class="top-bar-actions">
+          <span class="badge badge-progress">入力中</span>
+          <div class="autosave"><span class="autosave-dot"></span>自動保存済み</div>
+        </div>
+      </div>
+
+      <div class="tabs">
+        <div class="tab">基本情報</div>
+        <div class="tab">目標設定</div>
+        <div class="tab active">成果評価</div>
+        <div class="tab">Leader Radar</div>
+        <div class="tab">能力評価</div>
+        <div class="tab">行動評価</div>
+        <div class="tab">チェックリスト</div>
+        <div class="tab">総評</div>
+        <div class="tab">賞与情報</div>
+      </div>
+
+      <div class="card" style="margin-bottom:20px;">
+        <div class="card-header"><span class="card-title">📈 成果KPI</span></div>
+        <div class="card-content">
+          <div class="table-wrap">
+            <table>
+              <thead><tr><th>KPI</th><th style="text-align:center;">目標</th><th style="text-align:center;">実績</th><th style="text-align:center;">達成率</th></tr></thead>
+              <tbody>
+                <tr>
+                  <td style="font-weight:600;">完工数</td><td style="text-align:center;">12棟</td>
+                  <td style="text-align:center;"><input class="form-input" style="width:80px; text-align:center; padding:4px;" value="10"></td>
+                  <td style="text-align:center;"><span style="font-weight:700; color:var(--brand-orange);">83.3%</span></td>
+                </tr>
+                <tr>
+                  <td style="font-weight:600;">平均粗利率</td><td style="text-align:center;">28.0%</td>
+                  <td style="text-align:center;"><input class="form-input" style="width:80px; text-align:center; padding:4px;" value="28.5"></td>
+                  <td style="text-align:center;"><span style="font-weight:700; color:var(--color-success);">101.8%</span></td>
+                </tr>
+                <tr>
+                  <td style="font-weight:600;">仮契約数</td><td style="text-align:center;">15件</td>
+                  <td style="text-align:center;"><input class="form-input" style="width:80px; text-align:center; padding:4px;" value="13"></td>
+                  <td style="text-align:center;"><span style="font-weight:700; color:var(--brand-orange);">86.7%</span></td>
+                </tr>
+                <tr>
+                  <td style="font-weight:600;">仮契約率</td><td style="text-align:center;">—</td>
+                  <td style="text-align:center;"><input class="form-input" style="width:80px; text-align:center; padding:4px;" value="42.0"></td>
+                  <td style="text-align:center; color:var(--brand-gray);">—</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-header">
+          <span class="card-title">🏠 担当物件一覧</span>
+          <span style="font-size:12px; color:var(--brand-gray);">Excelインポートデータ</span>
+        </div>
+        <div class="card-content">
+          <div class="table-wrap">
+            <table>
+              <thead><tr><th>物件名</th><th style="text-align:right;">請負金額</th><th style="text-align:right;">粗利率</th><th style="text-align:right;">粗利額</th></tr></thead>
+              <tbody>
+                <tr><td>○○邸</td><td style="text-align:right;">3,000万</td><td style="text-align:right;">28.5%</td><td style="text-align:right;">855万</td></tr>
+                <tr><td>△△邸</td><td style="text-align:right;">2,800万</td><td style="text-align:right;">27.0%</td><td style="text-align:right;">756万</td></tr>
+                <tr><td>□□邸</td><td style="text-align:right;">3,200万</td><td style="text-align:right;">30.0%</td><td style="text-align:right;">960万</td></tr>
+                <tr><td>◇◇邸</td><td style="text-align:right;">2,500万</td><td style="text-align:right;">29.2%</td><td style="text-align:right;">730万</td></tr>
+              </tbody>
+            </table>
+          </div>
+          <div class="result-box" style="display:flex; gap:32px;">
+            <div><span class="result-label">合計請負</span><div style="font-size:18px; font-weight:800;">1.15億</div></div>
+            <div><span class="result-label">合計粗利</span><div style="font-size:18px; font-weight:800;">3,301万</div></div>
+            <div><span class="result-label">平均粗利率</span><div style="font-size:18px; font-weight:800; color:var(--brand-orange);">28.7%</div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ===== チェックリストタブ ===== -->
+    <div class="page" id="page-eval-checklist">
+      <div class="top-bar">
+        <div>
+          <div style="display:flex; align-items:center; gap:12px;">
+            <button class="btn btn-ghost" style="padding:4px 8px;" onclick="showPage('eval-edit')">← 戻る</button>
+            <h1>松坂 直樹の評価シート</h1>
+          </div>
+          <p style="font-size:14px; color:var(--brand-gray); margin-top:2px;">設計営業 / Lv.4-2 / 2026年度 上期</p>
+        </div>
+        <div class="top-bar-actions">
+          <span class="badge badge-progress">入力中</span>
+        </div>
+      </div>
+
+      <div class="tabs">
+        <div class="tab">基本情報</div>
+        <div class="tab">目標設定</div>
+        <div class="tab">成果評価</div>
+        <div class="tab">Leader Radar</div>
+        <div class="tab">能力評価</div>
+        <div class="tab">行動評価</div>
+        <div class="tab active">チェックリスト</div>
+        <div class="tab">総評</div>
+        <div class="tab">賞与情報</div>
+      </div>
+
+      <div class="card">
+        <div class="card-header">
+          <span class="card-title">✅ 能力チェックリスト</span>
+          <span style="font-size:14px; font-weight:700; color:var(--brand-orange);">12 / 15 完了</span>
+        </div>
+        <div class="card-content">
+          <!-- プログレスバー -->
+          <div style="height:8px; background:var(--brand-border); border-radius:4px; overflow:hidden; margin-bottom:20px;">
+            <div style="width:80%; height:100%; background:var(--brand-orange); border-radius:4px;"></div>
+          </div>
+
+          <div style="margin-bottom:16px;">
+            <div style="font-size:14px; font-weight:700; color:var(--brand-olive); margin-bottom:8px; padding-bottom:6px; border-bottom:1px solid var(--brand-border);">設計系</div>
+            <div class="checklist-item"><input type="checkbox" checked><span>基本的な間取りを単独で作成できる</span></div>
+            <div class="checklist-item"><input type="checkbox" checked><span>確認申請を単独で完了できる</span></div>
+            <div class="checklist-item"><input type="checkbox" checked><span>構造計算書のチェックができる</span></div>
+            <div class="checklist-item"><input type="checkbox" checked><span>複雑な屋根形状の設計ができる</span></div>
+            <div class="checklist-item"><input type="checkbox" checked><span>設計レビューを主導できる</span></div>
+          </div>
+
+          <div style="margin-bottom:16px;">
+            <div style="font-size:14px; font-weight:700; color:var(--brand-olive); margin-bottom:8px; padding-bottom:6px; border-bottom:1px solid var(--brand-border);">営業系</div>
+            <div class="checklist-item"><input type="checkbox" checked><span>初回接客を単独で完了できる</span></div>
+            <div class="checklist-item"><input type="checkbox" checked><span>見積もりを単独で作成できる</span></div>
+            <div class="checklist-item"><input type="checkbox" checked><span>契約手続きを単独でできる</span></div>
+            <div class="checklist-item"><input type="checkbox"><span style="color:var(--brand-gray);">値引き交渉を適切に判断できる</span></div>
+            <div class="checklist-item"><input type="checkbox" checked><span>クレーム対応を自力で解決できる</span></div>
+          </div>
+
+          <div>
+            <div style="font-size:14px; font-weight:700; color:var(--brand-olive); margin-bottom:8px; padding-bottom:6px; border-bottom:1px solid var(--brand-border);">管理系</div>
+            <div class="checklist-item"><input type="checkbox" checked><span>工程管理表を作成・管理できる</span></div>
+            <div class="checklist-item"><input type="checkbox" checked><span>後輩の業務指導ができる</span></div>
+            <div class="checklist-item"><input type="checkbox"><span style="color:var(--brand-gray);">現場での是正指示ができる</span></div>
+            <div class="checklist-item"><input type="checkbox"><span style="color:var(--brand-gray);">スタジオの売上管理ができる</span></div>
+            <div class="checklist-item"><input type="checkbox" checked><span>チーム全体の進捗を把握できる</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ===== 総評タブ ===== -->
+    <div class="page" id="page-eval-summary">
+      <div class="top-bar">
+        <div>
+          <div style="display:flex; align-items:center; gap:12px;">
+            <button class="btn btn-ghost" style="padding:4px 8px;" onclick="showPage('eval-edit')">← 戻る</button>
+            <h1>松坂 直樹の評価シート</h1>
+          </div>
+          <p style="font-size:14px; color:var(--brand-gray); margin-top:2px;">設計営業 / Lv.4-2 / 2026年度 上期</p>
+        </div>
+        <div class="top-bar-actions">
+          <span class="badge badge-progress">入力中</span>
+        </div>
+      </div>
+
+      <div class="tabs">
+        <div class="tab">基本情報</div>
+        <div class="tab">目標設定</div>
+        <div class="tab">成果評価</div>
+        <div class="tab">Leader Radar</div>
+        <div class="tab">能力評価</div>
+        <div class="tab">行動評価</div>
+        <div class="tab">チェックリスト</div>
+        <div class="tab active">総評</div>
+        <div class="tab">賞与情報</div>
+      </div>
+
+      <!-- 評価サマリーカード -->
+      <div style="display:grid; grid-template-columns:repeat(4,1fr); gap:12px; margin-bottom:20px;">
+        <div style="background:#fff; border:1px solid var(--brand-border); border-radius:8px; padding:14px; text-align:center;">
+          <div style="font-size:11px; color:var(--brand-gray);">能力評価</div>
+          <div style="font-size:22px; font-weight:800; color:var(--brand-orange);">3.80</div>
+        </div>
+        <div style="background:#fff; border:1px solid var(--brand-border); border-radius:8px; padding:14px; text-align:center;">
+          <div style="font-size:11px; color:var(--brand-gray);">行動評価</div>
+          <div style="font-size:22px; font-weight:800; color:var(--color-success);">25/32</div>
+        </div>
+        <div style="background:#fff; border:1px solid var(--brand-border); border-radius:8px; padding:14px; text-align:center;">
+          <div style="font-size:11px; color:var(--brand-gray);">役職係数</div>
+          <div style="font-size:22px; font-weight:800; color:var(--brand-olive);">1.37</div>
+        </div>
+        <div style="background:#fff; border:1px solid var(--brand-border); border-radius:8px; padding:14px; text-align:center;">
+          <div style="font-size:11px; color:var(--brand-gray);">チェックリスト</div>
+          <div style="font-size:22px; font-weight:800; color:var(--brand-charcoal);">12/15</div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-header"><span class="card-title">📝 評価者コメント</span></div>
+        <div class="card-content">
+          <div class="form-group">
+            <label class="form-label">総合評価コメント</label>
+            <textarea class="form-input" style="min-height:120px;" placeholder="今期の総合的な評価コメントを入力...">設計力は引き続き高水準を維持。後輩指導にも積極的で、チーム全体の底上げに貢献している。顧客対応力はやや課題あり。</textarea>
+          </div>
+          <div class="form-group">
+            <label class="form-label">来期に向けた期待・アドバイス</label>
+            <textarea class="form-input" placeholder="来期に期待することを入力...">顧客対応力の向上を期待。特に初回接客でのヒアリング精度を意識してほしい。</textarea>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ===== 賞与情報タブ ===== -->
+    <div class="page" id="page-eval-bonus">
+      <div class="top-bar">
+        <div>
+          <div style="display:flex; align-items:center; gap:12px;">
+            <button class="btn btn-ghost" style="padding:4px 8px;" onclick="showPage('eval-edit')">← 戻る</button>
+            <h1>松坂 直樹の評価シート</h1>
+          </div>
+          <p style="font-size:14px; color:var(--brand-gray); margin-top:2px;">設計営業 / Lv.4-2 / 2026年度 上期</p>
+        </div>
+      </div>
+
+      <div class="tabs">
+        <div class="tab">基本情報</div>
+        <div class="tab">目標設定</div>
+        <div class="tab">成果評価</div>
+        <div class="tab">Leader Radar</div>
+        <div class="tab">能力評価</div>
+        <div class="tab">行動評価</div>
+        <div class="tab">チェックリスト</div>
+        <div class="tab">総評</div>
+        <div class="tab active">賞与情報</div>
+      </div>
+
+      <div class="grid-2" style="margin-bottom:20px;">
+        <div class="card">
+          <div class="card-header"><span class="card-title">💰 今期の賞与</span></div>
+          <div class="card-content">
+            <div style="display:grid; grid-template-columns:1fr 1fr 1fr; gap:12px; margin-bottom:16px;">
+              <div style="background:var(--brand-warm-white); border-radius:8px; padding:14px; text-align:center;">
+                <div style="font-size:11px; color:var(--brand-gray);">個人賞与</div>
+                <div style="font-size:20px; font-weight:800;">¥520,000</div>
+              </div>
+              <div style="background:var(--brand-warm-white); border-radius:8px; padding:14px; text-align:center;">
+                <div style="font-size:11px; color:var(--brand-gray);">役割賞与</div>
+                <div style="font-size:20px; font-weight:800;">¥192,400</div>
+              </div>
+              <div style="background:var(--brand-orange-light); border:1px solid var(--brand-orange); border-radius:8px; padding:14px; text-align:center;">
+                <div style="font-size:11px; color:var(--brand-orange-dark);">合計</div>
+                <div style="font-size:20px; font-weight:800; color:var(--brand-orange);">¥712,400</div>
+              </div>
+            </div>
+            <div style="font-size:12px; color:var(--brand-gray);">役割賞与 = 個人賞与 × (役職係数1.37 - 1.0) = ¥520,000 × 0.37</div>
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-header"><span class="card-title">📊 賞与推移</span></div>
+          <div class="card-content" style="padding:16px 20px 20px;">
+            <div style="display:flex; align-items:flex-end; justify-content:space-around; height:120px; padding-bottom:4px; border-bottom:1px solid var(--brand-border);">
+              <div style="text-align:center; flex:1;"><div style="font-size:10px; color:var(--brand-gray); margin-bottom:3px;">¥420K</div><div style="width:28px; margin:0 auto; border-radius:3px 3px 0 0; background:#d4cfc7; height:60px;"></div></div>
+              <div style="text-align:center; flex:1;"><div style="font-size:10px; color:var(--brand-gray); margin-bottom:3px;">¥450K</div><div style="width:28px; margin:0 auto; border-radius:3px 3px 0 0; background:#d4cfc7; height:65px;"></div></div>
+              <div style="text-align:center; flex:1;"><div style="font-size:10px; color:var(--brand-gray); margin-bottom:3px;">¥480K</div><div style="width:28px; margin:0 auto; border-radius:3px 3px 0 0; background:#fcd99a; height:69px;"></div></div>
+              <div style="text-align:center; flex:1;"><div style="font-size:10px; color:var(--brand-orange); font-weight:700; margin-bottom:3px;">¥520K</div><div style="width:28px; margin:0 auto; border-radius:3px 3px 0 0; background:var(--brand-orange); height:75px;"></div></div>
+              <div style="text-align:center; flex:1;"><div style="font-size:10px; color:var(--brand-orange); font-weight:700; margin-bottom:3px;">¥712K</div><div style="width:28px; margin:0 auto; border-radius:3px 3px 0 0; background:var(--brand-orange); height:102px;"></div></div>
+            </div>
+            <div style="display:flex; justify-content:space-around; margin-top:4px;">
+              <span style="font-size:9px; color:var(--brand-gray); flex:1; text-align:center;">24夏</span>
+              <span style="font-size:9px; color:var(--brand-gray); flex:1; text-align:center;">24冬</span>
+              <span style="font-size:9px; color:var(--brand-gray); flex:1; text-align:center;">25夏</span>
+              <span style="font-size:9px; color:var(--brand-gray); flex:1; text-align:center;">25冬</span>
+              <span style="font-size:9px; color:var(--brand-orange); font-weight:700; flex:1; text-align:center;">26夏</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-header"><span class="card-title">📋 過去の賞与履歴</span></div>
+        <div class="card-content">
+          <div class="table-wrap">
+            <table>
+              <thead><tr><th>期間</th><th style="text-align:right;">個人賞与</th><th style="text-align:right;">役割賞与</th><th style="text-align:right;">合計</th></tr></thead>
+              <tbody>
+                <tr><td>2026年 夏</td><td style="text-align:right;">¥520,000</td><td style="text-align:right;">¥192,400</td><td style="text-align:right; font-weight:700;">¥712,400</td></tr>
+                <tr><td>2025年 冬</td><td style="text-align:right;">¥480,000</td><td style="text-align:right;">¥168,000</td><td style="text-align:right; font-weight:700;">¥648,000</td></tr>
+                <tr><td>2025年 夏</td><td style="text-align:right;">¥450,000</td><td style="text-align:right;">¥157,500</td><td style="text-align:right; font-weight:700;">¥607,500</td></tr>
+                <tr><td>2024年 冬</td><td style="text-align:right;">¥420,000</td><td style="text-align:right;">¥147,000</td><td style="text-align:right; font-weight:700;">¥567,000</td></tr>
+              </tbody>
+            </table>
+          </div>
+          <p style="font-size:12px; color:var(--brand-gray); margin-top:8px;">※ このデータはExcelインポートにより更新されます</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- ===== 360度行動評価入力（回答者ビュー） ===== -->
+    <div class="page" id="page-behavior-input">
+      <div class="top-bar">
+        <h1>行動評価入力</h1>
+      </div>
+
+      <div class="card" style="max-width:700px;">
+        <div class="card-header" style="background:var(--brand-orange-light);">
+          <div>
+            <span class="card-title">田中 太郎さんの行動評価</span>
+            <p style="font-size:12px; color:var(--brand-gray); margin-top:2px;">2026年度 上期</p>
+          </div>
+        </div>
+        <div class="card-content">
+          <p style="font-size:13px; color:var(--brand-olive); margin-bottom:16px; line-height:1.6;">
+            以下の項目について4段階で評価してください。<br>
+            <strong>4:</strong>すごく良い/真似したい　<strong>3:</strong>良い　<strong>2:</strong>ちょっと気になる　<strong>1:</strong>要改善
+          </p>
+
+          <div style="margin-bottom:20px; padding-bottom:16px; border-bottom:1px solid var(--brand-border);">
+            <div style="font-size:14px; font-weight:700; margin-bottom:4px;">❶ 笑顔/挨拶</div>
+            <p style="font-size:12px; color:var(--brand-gray); margin-bottom:8px;">いつでもどこでも誰にでも、笑顔と元気な声掛けで感じ良く接している</p>
+            <div class="score-buttons">
+              <button class="score-btn">1</button><button class="score-btn">2</button><button class="score-btn selected">3</button><button class="score-btn">4</button>
+            </div>
+          </div>
+
+          <div style="margin-bottom:20px; padding-bottom:16px; border-bottom:1px solid var(--brand-border);">
+            <div style="font-size:14px; font-weight:700; margin-bottom:4px;">❷ 発言/提案</div>
+            <p style="font-size:12px; color:var(--brand-gray); margin-bottom:8px;">会議の場において、積極的に発言・提案できている</p>
+            <div class="score-buttons">
+              <button class="score-btn">1</button><button class="score-btn selected">2</button><button class="score-btn">3</button><button class="score-btn">4</button>
+            </div>
+          </div>
+
+          <div style="margin-bottom:20px; padding-bottom:16px; border-bottom:1px solid var(--brand-border);">
+            <div style="font-size:14px; font-weight:700; margin-bottom:4px;">❸ 身だしなみ</div>
+            <p style="font-size:12px; color:var(--brand-gray); margin-bottom:8px;">常にフレッシュで清潔感のある身だしなみを心掛けている</p>
+            <div class="score-buttons">
+              <button class="score-btn">1</button><button class="score-btn">2</button><button class="score-btn">3</button><button class="score-btn selected">4</button>
+            </div>
+          </div>
+
+          <div style="margin-bottom:20px; padding-bottom:16px; border-bottom:1px solid var(--brand-border);">
+            <div style="font-size:14px; font-weight:700; margin-bottom:4px;">❹ 判断/行動</div>
+            <p style="font-size:12px; color:var(--brand-gray); margin-bottom:8px;">自ら考え判断し、責任ある行動ができている</p>
+            <div class="score-buttons">
+              <button class="score-btn">1</button><button class="score-btn">2</button><button class="score-btn selected">3</button><button class="score-btn">4</button>
+            </div>
+          </div>
+
+          <div style="margin-bottom:20px; padding-bottom:16px; border-bottom:1px solid var(--brand-border);">
+            <div style="font-size:14px; font-weight:700; margin-bottom:4px;">❺ 連携</div>
+            <p style="font-size:12px; color:var(--brand-gray); margin-bottom:8px;">周囲との報連相・情報共有が適切にできている</p>
+            <div class="score-buttons">
+              <button class="score-btn">1</button><button class="score-btn">2</button><button class="score-btn">3</button><button class="score-btn selected">4</button>
+            </div>
+          </div>
+
+          <div style="margin-bottom:20px; padding-bottom:16px; border-bottom:1px solid var(--brand-border);">
+            <div style="font-size:14px; font-weight:700; margin-bottom:4px;">❻ 支援/サポート</div>
+            <p style="font-size:12px; color:var(--brand-gray); margin-bottom:8px;">困っている仲間に自発的に手を差し伸べている</p>
+            <div class="score-buttons">
+              <button class="score-btn">1</button><button class="score-btn selected">2</button><button class="score-btn">3</button><button class="score-btn">4</button>
+            </div>
+          </div>
+
+          <div style="margin-bottom:20px; padding-bottom:16px; border-bottom:1px solid var(--brand-border);">
+            <div style="font-size:14px; font-weight:700; margin-bottom:4px;">❼ 学習/成長</div>
+            <p style="font-size:12px; color:var(--brand-gray); margin-bottom:8px;">新しい知識や技術を積極的に学び、業務に活かしている</p>
+            <div class="score-buttons">
+              <button class="score-btn">1</button><button class="score-btn">2</button><button class="score-btn selected">3</button><button class="score-btn">4</button>
+            </div>
+          </div>
+
+          <div style="margin-bottom:20px; padding-bottom:16px; border-bottom:1px solid var(--brand-border);">
+            <div style="font-size:14px; font-weight:700; margin-bottom:4px;">❽ 自己管理</div>
+            <p style="font-size:12px; color:var(--brand-gray); margin-bottom:8px;">時間管理・体調管理ができ、安定したパフォーマンスを発揮している</p>
+            <div class="score-buttons">
+              <button class="score-btn">1</button><button class="score-btn">2</button><button class="score-btn selected">3</button><button class="score-btn">4</button>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">コメント（任意）</label>
+            <textarea class="form-input" placeholder="気づいた点やメッセージがあれば..."></textarea>
+          </div>
+
+          <button class="btn btn-primary" style="width:100%;">評価を提出する</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- ===== 面談記録 ===== -->
+    <div class="page" id="page-meetings">
+      <div class="top-bar">
+        <h1>面談記録</h1>
+        <button class="btn btn-primary" data-page="meeting-new">+ 新規作成</button>
+      </div>
+
+      <!-- 年度タブ + フィルター -->
+      <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:16px;">
+        <div id="meeting-year-tabs" style="display:flex; gap:4px;">
+          <button class="btn btn-sm meeting-year-tab" data-year="2026" style="background:var(--brand-orange); color:#fff; border:1px solid var(--brand-orange); border-radius:6px; padding:5px 14px; font-weight:600; cursor:pointer;">2026年度</button>
+          <button class="btn btn-sm meeting-year-tab" data-year="2025" style="background:#fff; color:var(--brand-charcoal); border:1px solid var(--brand-border); border-radius:6px; padding:5px 14px; font-weight:600; cursor:pointer;">2025年度</button>
+          <button class="btn btn-sm meeting-year-tab" data-year="2024" style="background:#fff; color:var(--brand-charcoal); border:1px solid var(--brand-border); border-radius:6px; padding:5px 14px; font-weight:600; cursor:pointer;">2024年度</button>
+        </div>
+        <div style="display:flex; gap:8px;">
+          <select class="form-input" style="width:auto; min-width:120px; font-size:13px;">
+            <option>全タイプ</option><option>1on1</option><option>評価面談</option><option>その他</option>
+          </select>
+          <select class="form-input" style="width:auto; min-width:140px; font-size:13px;">
+            <option>全メンバー</option><option>田中 太郎</option><option>鈴木 花子</option><option>佐藤 一郎</option>
+          </select>
+        </div>
+      </div>
+
+      <!-- 年度別コンテンツ -->
+      <!-- 2026年度 -->
+      <div class="meeting-year-content" data-year="2026">
+        <div style="font-size:12px; color:var(--brand-gray); margin-bottom:10px;">3件の面談記録</div>
+
+        <div class="card" style="margin-bottom:12px; cursor:pointer;" data-page="meeting-detail" onmouseover="this.style.boxShadow='0 4px 12px rgba(48,45,44,0.1)'" onmouseout="this.style.boxShadow=''">
+          <div class="card-content" style="padding:16px 20px;">
+            <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:8px;">
+              <div style="display:flex; align-items:center; gap:10px;">
+                <span class="badge badge-progress">1on1</span>
+                <span style="font-weight:700;">田中 太郎</span>
+                <span style="font-size:13px; color:var(--brand-gray);">2026/03/05</span>
+              </div>
+              <span style="color:var(--brand-gray);">→</span>
+            </div>
+            <div style="font-size:13px; color:var(--brand-olive); line-height:1.6;">
+              ・能力チェックリスト3項目追加クリア<br>
+              ・顧客対応で課題感あり → ロープレ実施<br>
+              ・次回: 4月末に進捗確認
+            </div>
+          </div>
+        </div>
+
+        <div class="card" style="margin-bottom:12px; cursor:pointer;" data-page="meeting-detail" onmouseover="this.style.boxShadow='0 4px 12px rgba(48,45,44,0.1)'" onmouseout="this.style.boxShadow=''">
+          <div class="card-content" style="padding:16px 20px;">
+            <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:8px;">
+              <div style="display:flex; align-items:center; gap:10px;">
+                <span class="badge badge-submitted">評価面談</span>
+                <span style="font-weight:700;">鈴木 花子</span>
+                <span style="font-size:13px; color:var(--brand-gray);">2026/02/28</span>
+              </div>
+              <span style="color:var(--brand-gray);">→</span>
+            </div>
+            <div style="font-size:13px; color:var(--brand-olive); line-height:1.6;">
+              ・上期振り返り：IC業務の幅が広がった<br>
+              ・Lv.3-2へのステップアップを共有
+            </div>
+          </div>
+        </div>
+
+        <div class="card" style="margin-bottom:12px; cursor:pointer;" data-page="meeting-detail" onmouseover="this.style.boxShadow='0 4px 12px rgba(48,45,44,0.1)'" onmouseout="this.style.boxShadow=''">
+          <div class="card-content" style="padding:16px 20px;">
+            <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:8px;">
+              <div style="display:flex; align-items:center; gap:10px;">
+                <span class="badge badge-draft">その他</span>
+                <span style="font-weight:700;">佐藤 一郎</span>
+                <span style="font-size:13px; color:var(--brand-gray);">2026/02/15</span>
+              </div>
+              <span style="color:var(--brand-gray);">→</span>
+            </div>
+            <div style="font-size:13px; color:var(--brand-olive); line-height:1.6;">
+              ・キャリアの方向性について相談<br>
+              ・設計スキル強化の研修参加を検討
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 2025年度 -->
+      <div class="meeting-year-content" data-year="2025" style="display:none;">
+        <div style="font-size:12px; color:var(--brand-gray); margin-bottom:10px;">4件の面談記録</div>
+
+        <div class="card" style="margin-bottom:12px; cursor:pointer;" data-page="meeting-detail" onmouseover="this.style.boxShadow='0 4px 12px rgba(48,45,44,0.1)'" onmouseout="this.style.boxShadow=''">
+          <div class="card-content" style="padding:16px 20px;">
+            <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:8px;">
+              <div style="display:flex; align-items:center; gap:10px;">
+                <span class="badge badge-submitted">評価面談</span>
+                <span style="font-weight:700;">田中 太郎</span>
+                <span style="font-size:13px; color:var(--brand-gray);">2025/10/15</span>
+              </div>
+              <span style="color:var(--brand-gray);">→</span>
+            </div>
+            <div style="font-size:13px; color:var(--brand-olive); line-height:1.6;">
+              ・上期評価フィードバック（能力3.8 / 行動24点）<br>
+              ・Lv.3への昇格を通知・今後の目標を確認
+            </div>
+          </div>
+        </div>
+
+        <div class="card" style="margin-bottom:12px; cursor:pointer;" data-page="meeting-detail" onmouseover="this.style.boxShadow='0 4px 12px rgba(48,45,44,0.1)'" onmouseout="this.style.boxShadow=''">
+          <div class="card-content" style="padding:16px 20px;">
+            <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:8px;">
+              <div style="display:flex; align-items:center; gap:10px;">
+                <span class="badge badge-progress">1on1</span>
+                <span style="font-weight:700;">田中 太郎</span>
+                <span style="font-size:13px; color:var(--brand-gray);">2025/07/10</span>
+              </div>
+              <span style="color:var(--brand-gray);">→</span>
+            </div>
+            <div style="font-size:13px; color:var(--brand-olive); line-height:1.6;">
+              ・目標進捗確認：KPI達成率70%<br>
+              ・後輩指導の取り組みを評価
+            </div>
+          </div>
+        </div>
+
+        <div class="card" style="margin-bottom:12px; cursor:pointer;" data-page="meeting-detail" onmouseover="this.style.boxShadow='0 4px 12px rgba(48,45,44,0.1)'" onmouseout="this.style.boxShadow=''">
+          <div class="card-content" style="padding:16px 20px;">
+            <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:8px;">
+              <div style="display:flex; align-items:center; gap:10px;">
+                <span class="badge badge-progress">1on1</span>
+                <span style="font-weight:700;">鈴木 花子</span>
+                <span style="font-size:13px; color:var(--brand-gray);">2025/06/20</span>
+              </div>
+              <span style="color:var(--brand-gray);">→</span>
+            </div>
+            <div style="font-size:13px; color:var(--brand-olive); line-height:1.6;">
+              ・IC資格取得に向けた学習計画の相談<br>
+              ・社内コンペ参加の意思確認
+            </div>
+          </div>
+        </div>
+
+        <div class="card" style="margin-bottom:12px; cursor:pointer;" data-page="meeting-detail" onmouseover="this.style.boxShadow='0 4px 12px rgba(48,45,44,0.1)'" onmouseout="this.style.boxShadow=''">
+          <div class="card-content" style="padding:16px 20px;">
+            <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:8px;">
+              <div style="display:flex; align-items:center; gap:10px;">
+                <span class="badge badge-submitted">評価面談</span>
+                <span style="font-weight:700;">佐藤 一郎</span>
+                <span style="font-size:13px; color:var(--brand-gray);">2025/04/10</span>
+              </div>
+              <span style="color:var(--brand-gray);">→</span>
+            </div>
+            <div style="font-size:13px; color:var(--brand-olive); line-height:1.6;">
+              ・下期評価フィードバック<br>
+              ・現場監督としてのスキルアップ方針を共有
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 2024年度 -->
+      <div class="meeting-year-content" data-year="2024" style="display:none;">
+        <div style="font-size:12px; color:var(--brand-gray); margin-bottom:10px;">2件の面談記録</div>
+
+        <div class="card" style="margin-bottom:12px; cursor:pointer;" data-page="meeting-detail" onmouseover="this.style.boxShadow='0 4px 12px rgba(48,45,44,0.1)'" onmouseout="this.style.boxShadow=''">
+          <div class="card-content" style="padding:16px 20px;">
+            <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:8px;">
+              <div style="display:flex; align-items:center; gap:10px;">
+                <span class="badge badge-submitted">評価面談</span>
+                <span style="font-weight:700;">田中 太郎</span>
+                <span style="font-size:13px; color:var(--brand-gray);">2024/10/20</span>
+              </div>
+              <span style="color:var(--brand-gray);">→</span>
+            </div>
+            <div style="font-size:13px; color:var(--brand-olive); line-height:1.6;">
+              ・上期評価フィードバック（Lv.2-2→Lv.2-3ステップアップ）<br>
+              ・設計営業としての成長を確認
+            </div>
+          </div>
+        </div>
+
+        <div class="card" style="margin-bottom:12px; cursor:pointer;" data-page="meeting-detail" onmouseover="this.style.boxShadow='0 4px 12px rgba(48,45,44,0.1)'" onmouseout="this.style.boxShadow=''">
+          <div class="card-content" style="padding:16px 20px;">
+            <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:8px;">
+              <div style="display:flex; align-items:center; gap:10px;">
+                <span class="badge badge-progress">1on1</span>
+                <span style="font-weight:700;">鈴木 花子</span>
+                <span style="font-size:13px; color:var(--brand-gray);">2024/08/05</span>
+              </div>
+              <span style="color:var(--brand-gray);">→</span>
+            </div>
+            <div style="font-size:13px; color:var(--brand-olive); line-height:1.6;">
+              ・入社半年の振り返り<br>
+              ・IC業務への適応状況を確認
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ===== 賞与Excelインポート ===== -->
+    <div class="page" id="page-import-bonus">
+      <div class="top-bar">
+        <h1>賞与データ取込</h1>
+      </div>
+
+      <div style="max-width:800px;">
+        <!-- ステップ1 -->
+        <div class="card" style="margin-bottom:16px;">
+          <div class="card-header">
+            <span class="card-title">❶ Excelファイルをアップロード</span>
+          </div>
+          <div class="card-content">
+            <div style="border:2px dashed var(--brand-border); border-radius:12px; padding:40px; text-align:center; cursor:pointer; transition:all 0.2s;" onmouseover="this.style.borderColor='var(--brand-orange)'; this.style.background='var(--brand-orange-light)'" onmouseout="this.style.borderColor='var(--brand-border)'; this.style.background=''">
+              <div style="font-size:36px; margin-bottom:8px;">📄</div>
+              <div style="font-size:14px; font-weight:600; color:var(--brand-charcoal);">ファイルをドラッグ&ドロップ</div>
+              <div style="font-size:12px; color:var(--brand-gray); margin-top:4px;">またはクリックして選択（.xlsx / .xls）</div>
+            </div>
+            <div style="display:flex; gap:12px; margin-top:12px;">
+              <select class="form-input" style="width:auto;">
+                <option>2026年度</option><option>2025年度</option>
+              </select>
+              <select class="form-input" style="width:auto;">
+                <option>夏季賞与</option><option>冬季賞与</option>
+              </select>
+            </div>
+          </div>
+        </div>
+
+        <!-- ステップ2 -->
+        <div class="card" style="margin-bottom:16px;">
+          <div class="card-header">
+            <span class="card-title">❷ プレビュー確認</span>
+            <div><span style="color:var(--color-success); font-size:13px; font-weight:600;">✅ 158名マッチ</span>　<span style="color:var(--color-warning); font-size:13px; font-weight:600;">⚠ 2名不一致</span></div>
+          </div>
+          <div class="card-content">
+            <div class="table-wrap">
+              <table>
+                <thead><tr><th></th><th>名前</th><th style="text-align:right;">個人賞与</th><th style="text-align:right;">役割賞与</th><th style="text-align:right;">合計</th></tr></thead>
+                <tbody>
+                  <tr><td style="color:var(--color-success);">✅</td><td>松坂 直樹</td><td style="text-align:right;">520,000</td><td style="text-align:right;">192,400</td><td style="text-align:right; font-weight:600;">712,400</td></tr>
+                  <tr><td style="color:var(--color-success);">✅</td><td>田中 太郎</td><td style="text-align:right;">350,000</td><td style="text-align:right;">—</td><td style="text-align:right; font-weight:600;">350,000</td></tr>
+                  <tr style="background:var(--color-warning-bg);">
+                    <td style="color:var(--color-warning);">⚠</td><td>佐藤（不一致）<br><span style="font-size:11px; color:var(--color-error);">社員番号が一致しません</span></td>
+                    <td style="text-align:right;">300,000</td><td style="text-align:right;">—</td><td style="text-align:right; font-weight:600;">300,000</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+
+        <!-- ステップ3 -->
+        <div class="card">
+          <div class="card-header"><span class="card-title">❸ 確定</span></div>
+          <div class="card-content" style="text-align:center; padding:24px;">
+            <p style="font-size:14px; color:var(--brand-olive); margin-bottom:16px;">158名分の賞与データを取り込みます。不一致の2名は除外されます。</p>
+            <button class="btn btn-primary" style="padding:12px 32px; font-size:15px;">取込を実行する</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ===== 等級変更候補 ===== -->
+    <div class="page" id="page-level-changes">
+      <div class="top-bar">
+        <h1>等級変更候補</h1>
+        <button class="btn btn-primary">変更を確定して反映</button>
+      </div>
+
+      <!-- ステップアップ -->
+      <div class="card" style="margin-bottom:16px;">
+        <div class="card-header" style="background:var(--color-success-bg);">
+          <span class="card-title" style="color:var(--color-success);">⬆ ステップアップ候補（条件クリア）</span>
+        </div>
+        <div class="card-content">
+          <div class="table-wrap">
+            <table>
+              <thead><tr><th>名前</th><th>現等級</th><th style="text-align:center;">行動評価</th><th style="text-align:center;">成果基準</th><th style="text-align:center;">判定</th></tr></thead>
+              <tbody>
+                <tr>
+                  <td style="font-weight:600;">田中 太郎</td><td>Lv.2-1</td>
+                  <td style="text-align:center;"><span style="color:var(--color-success);">24点 ✅</span></td>
+                  <td style="text-align:center;"><span style="color:var(--color-success);">クリア ✅</span></td>
+                  <td style="text-align:center;">
+                    <select class="form-input" style="width:100px; padding:4px 8px; font-size:13px;">
+                      <option>承認</option><option>保留</option><option>却下</option>
+                    </select>
+                  </td>
+                </tr>
+                <tr>
+                  <td style="font-weight:600;">鈴木 花子</td><td>Lv.3-1</td>
+                  <td style="text-align:center;"><span style="color:var(--color-success);">23点 ✅</span></td>
+                  <td style="text-align:center;"><span style="color:var(--color-success);">クリア ✅</span></td>
+                  <td style="text-align:center;">
+                    <select class="form-input" style="width:100px; padding:4px 8px; font-size:13px;">
+                      <option>承認</option><option>保留</option><option>却下</option>
+                    </select>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <!-- レベルアップ -->
+      <div class="card" style="margin-bottom:16px;">
+        <div class="card-header" style="background:var(--color-info-bg);">
+          <span class="card-title" style="color:var(--color-info);">⬆⬆ レベルアップ候補</span>
+        </div>
+        <div class="card-content">
+          <div class="table-wrap">
+            <table>
+              <thead><tr><th>名前</th><th>現等級</th><th style="text-align:center;">行動評価</th><th style="text-align:center;">能力平均</th><th style="text-align:center;">CL</th><th style="text-align:center;">判定</th></tr></thead>
+              <tbody>
+                <tr>
+                  <td style="font-weight:600;">佐藤 一郎</td><td>Lv.2-3</td>
+                  <td style="text-align:center;"><span style="color:var(--color-success);">25点 ✅</span></td>
+                  <td style="text-align:center;"><span style="color:var(--color-success);">4.2 ✅</span></td>
+                  <td style="text-align:center;"><span style="color:var(--color-success);">✅</span></td>
+                  <td style="text-align:center;">
+                    <select class="form-input" style="width:100px; padding:4px 8px; font-size:13px;">
+                      <option>承認</option><option>保留</option><option>却下</option>
+                    </select>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <!-- ステップバック -->
+      <div class="card">
+        <div class="card-header" style="background:var(--color-warning-bg);">
+          <span class="card-title" style="color:#92400E;">⬇ ステップバック候補（要注意）</span>
+        </div>
+        <div class="card-content">
+          <div class="table-wrap">
+            <table>
+              <thead><tr><th>名前</th><th>現等級</th><th style="text-align:center;">行動評価</th><th style="text-align:center;">成果基準</th><th style="text-align:center;">判定</th></tr></thead>
+              <tbody>
+                <tr>
+                  <td style="font-weight:600;">山田 美咲</td><td>Lv.2-2</td>
+                  <td style="text-align:center;"><span style="color:var(--color-warning);">16点 ⚠</span></td>
+                  <td style="text-align:center;"><span style="color:var(--color-warning);">未達 ⚠</span></td>
+                  <td style="text-align:center;">
+                    <select class="form-input" style="width:100px; padding:4px 8px; font-size:13px;">
+                      <option>確認中</option><option>実行</option><option>据置</option>
+                    </select>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ===== 評価期間管理 ===== -->
+    <div class="page" id="page-period-manage">
+      <div class="top-bar">
+        <h1>評価期間管理</h1>
+        <button class="btn btn-primary" data-page="period-manage">+ 新規期間作成</button>
+      </div>
+
+      <div class="card">
+        <div class="card-content">
+          <div class="table-wrap">
+            <table>
+              <thead><tr><th>期間名</th><th>開始日</th><th>終了日</th><th style="text-align:center;">ステータス</th><th style="text-align:center;">目標締切</th><th style="text-align:center;">評価締切</th><th></th></tr></thead>
+              <tbody>
+                <tr style="background:var(--brand-orange-light);">
+                  <td style="font-weight:600;">2026年度 上期</td><td>2026/04/01</td><td>2026/09/30</td>
+                  <td style="text-align:center;"><span class="badge badge-progress">進行中</span></td>
+                  <td style="text-align:center;">2026/04/15</td>
+                  <td style="text-align:center;">2026/09/15</td>
+                  <td><button class="btn btn-ghost btn-sm" data-page="period-manage">編集</button></td>
+                </tr>
+                <tr>
+                  <td style="font-weight:600;">2025年度 下期</td><td>2025/10/01</td><td>2026/03/31</td>
+                  <td style="text-align:center;"><span class="badge badge-finalized">完了</span></td>
+                  <td style="text-align:center;">2025/10/15</td>
+                  <td style="text-align:center;">2026/03/15</td>
+                  <td><button class="btn btn-ghost btn-sm" data-page="period-manage">閲覧</button></td>
+                </tr>
+                <tr>
+                  <td style="font-weight:600;">2025年度 上期</td><td>2025/04/01</td><td>2025/09/30</td>
+                  <td style="text-align:center;"><span class="badge badge-finalized">完了</span></td>
+                  <td style="text-align:center;">2025/04/15</td>
+                  <td style="text-align:center;">2025/09/15</td>
+                  <td><button class="btn btn-ghost btn-sm" data-page="period-manage">閲覧</button></td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ===== 新規評価作成 ===== -->
+    <div class="page" id="page-eval-new">
+      <div class="top-bar"><h1>評価シート新規作成</h1></div>
+      <div style="max-width:500px; margin:0 auto;">
+        <div class="card">
+          <div class="card-header"><span class="card-title">作成情報</span></div>
+          <div class="card-content">
+            <div class="form-group">
+              <label class="form-label">社員</label>
+              <select class="form-input">
+                <option value="">選択してください</option>
+                <option>松坂 直樹（設計営業 / Lv.4-2）</option>
+                <option>田中 太郎（設計営業 / Lv.2-1）</option>
+                <option>鈴木 花子（IC / Lv.3-1）</option>
+                <option>佐藤 一郎（設計営業 / Lv.1-1）</option>
+                <option>山田 美咲（現場監督 / Lv.2-2）</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label class="form-label">評価期間</label>
+              <select class="form-input">
+                <option>2026年度 上期 (アクティブ)</option>
+                <option>2025年度 下期</option>
+              </select>
+            </div>
+            <button class="btn btn-primary" style="width:100%; margin-top:8px;" onclick="showPage('eval-edit')">評価シートを作成</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ===== 評価シート閲覧（確定済み） ===== -->
+    <div class="page" id="page-eval-view">
+      <div class="top-bar">
+        <div>
+          <div style="display:flex; align-items:center; gap:12px;">
+            <button class="btn btn-ghost" style="padding:4px 8px;" onclick="showPage('eval-list')">← 戻る</button>
+            <h1>山田 美咲の評価シート</h1>
+          </div>
+          <p style="font-size:14px; color:var(--brand-gray); margin-top:2px;">現場監督 / Lv.2-2 / 2025年度 下期</p>
+        </div>
+        <div class="top-bar-actions">
+          <span class="badge badge-finalized">確定済 🔒</span>
+          <button class="btn btn-outline btn-sm" onclick="showPage('eval-print')">🖨 印刷</button>
+        </div>
+      </div>
+
+      <div class="tabs">
+        <div class="tab active">サマリー</div>
+        <div class="tab">目標設定</div>
+        <div class="tab">成果評価</div>
+        <div class="tab">能力評価</div>
+        <div class="tab">行動評価</div>
+        <div class="tab">総評</div>
+      </div>
+
+      <!-- サマリー表示 -->
+      <div style="display:grid; grid-template-columns:1fr 1fr; gap:16px; margin-bottom:20px;">
+        <div class="card">
+          <div class="card-header"><span class="card-title">評価スコア</span></div>
+          <div class="card-content">
+            <div style="display:grid; grid-template-columns:1fr 1fr; gap:16px;">
+              <div style="text-align:center;">
+                <div style="position:relative; width:100px; height:100px; margin:0 auto 8px;">
+                  <svg viewBox="0 0 120 120" style="transform:rotate(-90deg);"><circle cx="60" cy="60" r="50" fill="none" stroke="#E8E4DE" stroke-width="10"/><circle cx="60" cy="60" r="50" fill="none" stroke="#F99900" stroke-width="10" stroke-dasharray="314" stroke-dashoffset="100" stroke-linecap="round"/></svg>
+                  <div style="position:absolute; inset:0; display:flex; flex-direction:column; align-items:center; justify-content:center;"><span style="font-size:22px; font-weight:800; color:var(--brand-orange);">3.40</span><span style="font-size:10px; color:var(--brand-gray);">/ 5.00</span></div>
+                </div>
+                <div style="font-size:12px; font-weight:600;">能力評価</div>
+              </div>
+              <div style="text-align:center;">
+                <div style="position:relative; width:100px; height:100px; margin:0 auto 8px;">
+                  <svg viewBox="0 0 120 120" style="transform:rotate(-90deg);"><circle cx="60" cy="60" r="50" fill="none" stroke="#E8E4DE" stroke-width="10"/><circle cx="60" cy="60" r="50" fill="none" stroke="#16A34A" stroke-width="10" stroke-dasharray="314" stroke-dashoffset="118" stroke-linecap="round"/></svg>
+                  <div style="position:absolute; inset:0; display:flex; flex-direction:column; align-items:center; justify-content:center;"><span style="font-size:22px; font-weight:800; color:var(--color-success);">20</span><span style="font-size:10px; color:var(--brand-gray);">/ 32点</span></div>
+                </div>
+                <div style="font-size:12px; font-weight:600;">行動評価</div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-header"><span class="card-title">総評コメント</span></div>
+          <div class="card-content">
+            <div style="background:var(--brand-warm-white); border-radius:6px; padding:12px; font-size:14px; line-height:1.7; color:var(--brand-olive);">
+              現場管理能力は着実に向上。安全管理への意識も高い。次期はコスト管理面の強化を期待。
+            </div>
+            <div style="margin-top:12px;">
+              <div style="font-size:12px; color:var(--brand-gray); margin-bottom:4px;">来期の期待</div>
+              <div style="background:var(--brand-warm-white); border-radius:6px; padding:12px; font-size:14px; line-height:1.7; color:var(--brand-olive);">
+                工程管理のさらなる効率化と、後輩への指導力強化を目指してほしい。
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-header"><span class="card-title">レーダーチャート</span></div>
+        <div class="card-content" style="display:flex; justify-content:center; padding:20px;">
+          <svg viewBox="0 0 300 260" width="280" height="240">
+            <g transform="translate(150,130)">
+              <polygon points="0,-100 95,-31 59,81 -59,81 -95,-31" fill="none" stroke="#E8E4DE" stroke-width="1"/>
+              <polygon points="0,-80 76,-25 47,65 -47,65 -76,-25" fill="none" stroke="#E8E4DE" stroke-width="1"/>
+              <polygon points="0,-60 57,-19 35,49 -35,49 -57,-19" fill="none" stroke="#E8E4DE" stroke-width="1"/>
+              <polygon points="0,-40 38,-12 24,32 -24,32 -38,-12" fill="none" stroke="#E8E4DE" stroke-width="1"/>
+              <polygon points="0,-20 19,-6 12,16 -12,16 -19,-6" fill="none" stroke="#E8E4DE" stroke-width="1"/>
+              <line x1="0" y1="0" x2="0" y2="-100" stroke="#E8E4DE"/><line x1="0" y1="0" x2="95" y2="-31" stroke="#E8E4DE"/><line x1="0" y1="0" x2="59" y2="81" stroke="#E8E4DE"/><line x1="0" y1="0" x2="-59" y2="81" stroke="#E8E4DE"/><line x1="0" y1="0" x2="-95" y2="-31" stroke="#E8E4DE"/>
+              <polygon points="0,-60 76,-25 35,49 -35,49 -57,-19" fill="rgba(249,153,0,0.15)" stroke="#F99900" stroke-width="2.5"/>
+              <circle cx="0" cy="-60" r="4" fill="#F99900"/><circle cx="76" cy="-25" r="4" fill="#F99900"/><circle cx="35" cy="49" r="4" fill="#F99900"/><circle cx="-35" cy="49" r="4" fill="#F99900"/><circle cx="-57" cy="-19" r="4" fill="#F99900"/>
+            </g>
+            <text x="150" y="20" text-anchor="middle" font-size="11" font-weight="600" fill="#302D2C">施工管理力 3</text>
+            <text x="262" y="100" text-anchor="start" font-size="11" font-weight="600" fill="#302D2C">品質管理 4</text>
+            <text x="222" y="225" text-anchor="start" font-size="11" font-weight="600" fill="#302D2C">安全管理 3</text>
+            <text x="78" y="225" text-anchor="end" font-size="11" font-weight="600" fill="#302D2C">コスト管理 3</text>
+            <text x="38" y="100" text-anchor="end" font-size="11" font-weight="600" fill="#302D2C">コミュニケーション 3</text>
+          </svg>
+        </div>
+      </div>
+    </div>
+
+    <!-- ===== 印刷用ビュー ===== -->
+    <div class="page" id="page-eval-print">
+      <div style="max-width:800px; margin:0 auto;">
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:16px;">
+          <button class="btn btn-ghost" onclick="showPage('eval-view')">← 戻る</button>
+          <button class="btn btn-primary btn-sm" onclick="window.print()">🖨 印刷する</button>
+        </div>
+
+        <div style="background:#fff; border:1px solid var(--brand-border); border-radius:8px; padding:40px; box-shadow:var(--shadow-md);">
+          <!-- ヘッダー -->
+          <div style="display:flex; justify-content:space-between; align-items:flex-start; border-bottom:2px solid var(--brand-charcoal); padding-bottom:12px; margin-bottom:16px;">
+            <div>
+              <div style="font-size:20px; font-weight:800; color:var(--brand-charcoal);">人事評価シート</div>
+              <div style="font-size:12px; color:var(--brand-gray);">2025年度 下期</div>
+            </div>
+            <div style="text-align:right; font-size:13px; color:var(--brand-olive);">
+              <div style="font-weight:700; font-size:16px;">山田 美咲</div>
+              <div>現場監督 / Lv.2-2 / スタジオB</div>
+            </div>
+          </div>
+
+          <!-- 評価サマリー -->
+          <div style="display:grid; grid-template-columns:repeat(4,1fr); gap:12px; margin-bottom:20px;">
+            <div style="border:1px solid var(--brand-border); border-radius:6px; padding:10px; text-align:center;">
+              <div style="font-size:10px; color:var(--brand-gray);">能力評価</div>
+              <div style="font-size:20px; font-weight:800; color:var(--brand-orange);">3.40</div>
+            </div>
+            <div style="border:1px solid var(--brand-border); border-radius:6px; padding:10px; text-align:center;">
+              <div style="font-size:10px; color:var(--brand-gray);">行動評価</div>
+              <div style="font-size:20px; font-weight:800; color:var(--color-success);">20/32</div>
+            </div>
+            <div style="border:1px solid var(--brand-border); border-radius:6px; padding:10px; text-align:center;">
+              <div style="font-size:10px; color:var(--brand-gray);">チェックリスト</div>
+              <div style="font-size:20px; font-weight:800;">8/12</div>
+            </div>
+            <div style="border:1px solid var(--brand-border); border-radius:6px; padding:10px; text-align:center;">
+              <div style="font-size:10px; color:var(--brand-gray);">役職係数</div>
+              <div style="font-size:20px; font-weight:800;">—</div>
+            </div>
+          </div>
+
+          <!-- 能力評価 -->
+          <div style="margin-bottom:16px;">
+            <div style="font-size:13px; font-weight:700; border-bottom:1px solid var(--brand-border); padding-bottom:4px; margin-bottom:8px;">能力評価</div>
+            <table style="width:100%; font-size:12px;">
+              <tr><td style="padding:3px 0;">①施工管理力</td><td style="text-align:right; font-weight:700;">3</td></tr>
+              <tr><td style="padding:3px 0;">②品質管理</td><td style="text-align:right; font-weight:700;">4</td></tr>
+              <tr><td style="padding:3px 0;">③安全管理</td><td style="text-align:right; font-weight:700;">3</td></tr>
+              <tr><td style="padding:3px 0;">④コスト管理</td><td style="text-align:right; font-weight:700;">3</td></tr>
+              <tr><td style="padding:3px 0;">⑤コミュニケーション</td><td style="text-align:right; font-weight:700;">4</td></tr>
+              <tr style="border-top:1px solid var(--brand-border);"><td style="padding:4px 0; font-weight:700;">平均</td><td style="text-align:right; font-weight:800; color:var(--brand-orange);">3.40</td></tr>
+            </table>
+          </div>
+
+          <!-- 行動評価 -->
+          <div style="margin-bottom:16px;">
+            <div style="font-size:13px; font-weight:700; border-bottom:1px solid var(--brand-border); padding-bottom:4px; margin-bottom:8px;">行動評価</div>
+            <table style="width:100%; font-size:12px;">
+              <tr><td style="padding:3px 0;">①笑顔/挨拶</td><td style="text-align:right;">3</td><td style="padding:3px 0 3px 16px;">⑤連携</td><td style="text-align:right;">2</td></tr>
+              <tr><td style="padding:3px 0;">②発言/提案</td><td style="text-align:right;">2</td><td style="padding:3px 0 3px 16px;">⑥支援</td><td style="text-align:right;">3</td></tr>
+              <tr><td style="padding:3px 0;">③身だしなみ</td><td style="text-align:right;">3</td><td style="padding:3px 0 3px 16px;">⑦学習</td><td style="text-align:right;">2</td></tr>
+              <tr><td style="padding:3px 0;">④判断/行動</td><td style="text-align:right;">3</td><td style="padding:3px 0 3px 16px;">⑧自己管理</td><td style="text-align:right;">2</td></tr>
+              <tr style="border-top:1px solid var(--brand-border);"><td colspan="3" style="padding:4px 0; font-weight:700;">合計</td><td style="text-align:right; font-weight:800; color:var(--color-success);">20/32</td></tr>
+            </table>
+          </div>
+
+          <!-- 総評 -->
+          <div>
+            <div style="font-size:13px; font-weight:700; border-bottom:1px solid var(--brand-border); padding-bottom:4px; margin-bottom:8px;">総評</div>
+            <div style="font-size:12px; line-height:1.7; color:var(--brand-olive);">
+              現場管理能力は着実に向上。安全管理への意識も高い。次期はコスト管理面の強化を期待。
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ===== 行動評価依頼一覧 ===== -->
+    <div class="page" id="page-behavior-list">
+      <div class="top-bar">
+        <h1>行動評価依頼一覧</h1>
+      </div>
+
+      <div style="display:grid; grid-template-columns:1fr 1fr; gap:16px; margin-bottom:20px;">
+        <div class="stat-card">
+          <div class="stat-value orange">2</div>
+          <div class="stat-label">未回答の依頼</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-value green">3</div>
+          <div class="stat-label">回答済み</div>
+        </div>
+      </div>
+
+      <h3 style="font-size:15px; font-weight:700; margin-bottom:12px; color:var(--brand-orange);">⏳ 未回答</h3>
+      <div class="card" style="margin-bottom:8px; border-left:3px solid var(--brand-orange); cursor:pointer;" data-page="behavior-input" onmouseover="this.style.boxShadow='var(--shadow-md)'" onmouseout="this.style.boxShadow=''">
+        <div class="card-content" style="padding:14px 20px; display:flex; align-items:center; justify-content:space-between;">
+          <div>
+            <div style="font-weight:700;">田中 太郎</div>
+            <div style="font-size:12px; color:var(--brand-gray);">設計営業 / Lv.2-1 / 2026年度 上期</div>
+          </div>
+          <div style="text-align:right;">
+            <div style="font-size:12px; color:var(--color-error);">締切: 4/20</div>
+            <button class="btn btn-primary btn-sm" style="margin-top:4px;" data-page="behavior-input">回答する →</button>
+          </div>
+        </div>
+      </div>
+      <div class="card" style="margin-bottom:20px; border-left:3px solid var(--brand-orange); cursor:pointer;" data-page="behavior-input" onmouseover="this.style.boxShadow='var(--shadow-md)'" onmouseout="this.style.boxShadow=''">
+        <div class="card-content" style="padding:14px 20px; display:flex; align-items:center; justify-content:space-between;">
+          <div>
+            <div style="font-weight:700;">鈴木 花子</div>
+            <div style="font-size:12px; color:var(--brand-gray);">IC / Lv.3-1 / 2026年度 上期</div>
+          </div>
+          <div style="text-align:right;">
+            <div style="font-size:12px; color:var(--color-error);">締切: 4/20</div>
+            <button class="btn btn-primary btn-sm" style="margin-top:4px;" data-page="behavior-input">回答する →</button>
+          </div>
+        </div>
+      </div>
+
+      <h3 style="font-size:15px; font-weight:700; margin-bottom:12px; color:var(--color-success);">✅ 回答済み</h3>
+      <div class="card" style="margin-bottom:8px; border-left:3px solid var(--color-success); opacity:0.7;">
+        <div class="card-content" style="padding:14px 20px; display:flex; align-items:center; justify-content:space-between;">
+          <div>
+            <div style="font-weight:700;">佐藤 一郎</div>
+            <div style="font-size:12px; color:var(--brand-gray);">設計営業 / Lv.1-1 / 2025年度 下期</div>
+          </div>
+          <span class="badge badge-finalized">回答済み 3/5</span>
+        </div>
+      </div>
+      <div class="card" style="margin-bottom:8px; border-left:3px solid var(--color-success); opacity:0.7;">
+        <div class="card-content" style="padding:14px 20px; display:flex; align-items:center; justify-content:space-between;">
+          <div>
+            <div style="font-weight:700;">高橋 裕子</div>
+            <div style="font-size:12px; color:var(--brand-gray);">保育士 / Lv.2-1 / 2025年度 下期</div>
+          </div>
+          <span class="badge badge-finalized">回答済み 3/1</span>
+        </div>
+      </div>
+      <div class="card" style="margin-bottom:8px; border-left:3px solid var(--color-success); opacity:0.7;">
+        <div class="card-content" style="padding:14px 20px; display:flex; align-items:center; justify-content:space-between;">
+          <div>
+            <div style="font-weight:700;">山田 美咲</div>
+            <div style="font-size:12px; color:var(--brand-gray);">現場監督 / Lv.2-2 / 2025年度 下期</div>
+          </div>
+          <span class="badge badge-finalized">回答済み 2/28</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- ===== 社員詳細 ===== -->
+    <div class="page" id="page-employee-detail">
+      <div class="top-bar">
+        <div>
+          <div style="display:flex; align-items:center; gap:12px;">
+            <button class="btn btn-ghost" style="padding:4px 8px;" onclick="showPage('employees')">← 社員一覧</button>
+            <h1 id="emp-detail-name">田中 太郎</h1>
+          </div>
+        </div>
+        <button class="btn btn-outline btn-sm" data-page="employee-detail">編集</button>
+      </div>
+
+      <div style="display:grid; grid-template-columns:1fr 2fr; gap:20px;">
+        <!-- 左: プロフィール -->
+        <div>
+          <div class="card" style="margin-bottom:16px;">
+            <div class="card-content" style="text-align:center; padding:24px;">
+              <div id="emp-detail-avatar" style="width:80px; height:80px; border-radius:50%; background:var(--brand-orange-light); display:flex; align-items:center; justify-content:center; margin:0 auto 12px; font-size:32px; color:var(--brand-orange); font-weight:700;">田</div>
+              <div id="emp-detail-fullname" style="font-size:18px; font-weight:700;">田中 太郎</div>
+              <div id="emp-detail-email" style="font-size:13px; color:var(--brand-gray); margin-top:4px;">tanaka@collabohouse.info</div>
+            </div>
+          </div>
+          <div class="card">
+            <div class="card-content">
+              <div style="display:grid; grid-template-columns:auto 1fr; gap:6px 16px; font-size:14px;">
+                <span style="color:var(--brand-gray);">職種</span><span id="emp-detail-job" style="font-weight:600;">設計営業</span>
+                <span style="color:var(--brand-gray);">等級</span><span id="emp-detail-level" style="font-weight:600;">Lv.2-1</span>
+                <span style="color:var(--brand-gray);">役職</span><span id="emp-detail-role">—</span>
+                <span style="color:var(--brand-gray);">所属</span><span id="emp-detail-dept">スタジオA</span>
+                <span style="color:var(--brand-gray);">入社年度</span><span id="emp-detail-year">2020年</span>
+                <span style="color:var(--brand-gray);">リーダー</span><span id="emp-detail-leader">いいえ</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- 右: 評価履歴 -->
+        <div>
+          <div class="card" style="margin-bottom:16px;">
+            <div class="card-header"><span class="card-title">📋 評価履歴</span></div>
+            <div class="card-content">
+              <div class="table-wrap">
+                <table>
+                  <thead><tr><th>期間</th><th style="text-align:center;">等級</th><th style="text-align:center;">能力</th><th style="text-align:center;">行動</th><th style="text-align:center;">ステータス</th><th></th></tr></thead>
+                  <tbody id="emp-detail-history"></tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+
+          <div class="card">
+            <div class="card-header"><span class="card-title">📈 能力推移</span></div>
+            <div class="card-content" style="padding:16px 20px;">
+              <div id="emp-detail-chart" style="display:flex; align-items:flex-end; gap:4px; height:100px; border-bottom:1px solid var(--brand-border); padding-bottom:4px;"></div>
+              <div id="emp-detail-chart-labels" style="display:flex; gap:4px; margin-top:4px;"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ===== 面談詳細 ===== -->
+    <div class="page" id="page-meeting-detail">
+      <div class="top-bar">
+        <div>
+          <div style="display:flex; align-items:center; gap:12px;">
+            <button class="btn btn-ghost" style="padding:4px 8px;" onclick="showPage('meetings')">← 戻る</button>
+            <h1>面談記録 詳細</h1>
+          </div>
+        </div>
+        <div style="display:flex; gap:8px;">
+          <button class="btn btn-outline btn-sm" data-page="meeting-detail">✏️ 編集</button>
+          <button class="btn btn-ghost btn-sm" style="color:var(--color-error);">🗑 削除</button>
+        </div>
+      </div>
+
+      <div style="max-width:700px;">
+        <!-- 基本情報 -->
+        <div class="card" style="margin-bottom:16px;">
+          <div class="card-content" style="padding:20px;">
+            <div style="display:flex; align-items:center; gap:12px; margin-bottom:16px;">
+              <span class="badge badge-progress">1on1</span>
+              <span style="font-size:13px; color:var(--brand-gray);">2026/03/05（水）14:00〜14:30</span>
+            </div>
+            <div style="display:grid; grid-template-columns:1fr 1fr; gap:16px;">
+              <div>
+                <div style="font-size:11px; color:var(--brand-gray); margin-bottom:2px;">対象者</div>
+                <div style="font-weight:700; display:flex; align-items:center; gap:8px;">
+                  <div style="width:32px; height:32px; border-radius:50%; background:var(--brand-orange-100); display:flex; align-items:center; justify-content:center; font-size:14px;">田</div>
+                  <div>
+                    <div>田中 太郎</div>
+                    <div style="font-size:11px; color:var(--brand-gray); font-weight:400;">設計営業 / Lv.3-1</div>
+                  </div>
+                </div>
+              </div>
+              <div>
+                <div style="font-size:11px; color:var(--brand-gray); margin-bottom:2px;">面談者</div>
+                <div style="font-weight:700; display:flex; align-items:center; gap:8px;">
+                  <div style="width:32px; height:32px; border-radius:50%; background:var(--brand-orange-100); display:flex; align-items:center; justify-content:center; font-size:14px;">松</div>
+                  <div>
+                    <div>松坂 直樹</div>
+                    <div style="font-size:11px; color:var(--brand-gray); font-weight:400;">管理者</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- 面談内容 -->
+        <div class="card" style="margin-bottom:16px;">
+          <div class="card-header">
+            <span class="card-title">面談内容</span>
+          </div>
+          <div class="card-content" style="padding:20px;">
+            <div style="font-size:14px; color:var(--brand-charcoal); line-height:1.8;">
+              <p style="font-weight:600; margin-bottom:8px;">■ 前回からの振り返り</p>
+              <p style="margin-bottom:12px;">・能力チェックリスト3項目を追加クリア（提案力・コスト管理・工程管理）<br>
+              ・前回指摘のあった顧客対応は改善傾向にある</p>
+
+              <p style="font-weight:600; margin-bottom:8px;">■ 今回の議題</p>
+              <p style="margin-bottom:12px;">・顧客対応で課題感あり：クレーム対応時に上長への報告が遅れるケースが2件<br>
+              ・対策としてロープレを実施。シナリオ3パターンで練習<br>
+              ・設計品質は安定しており、後輩指導も積極的に取り組んでいる</p>
+
+              <p style="font-weight:600; margin-bottom:8px;">■ 次回アクション</p>
+              <p>・クレーム対応フローの再確認（本人タスク）<br>
+              ・4月末に進捗確認の1on1を実施<br>
+              ・Lv.3-2ステップアップに向けた残りチェック項目の確認</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- 次回予定 -->
+        <div class="card" style="margin-bottom:16px;">
+          <div class="card-header">
+            <span class="card-title">次回予定</span>
+          </div>
+          <div class="card-content" style="padding:16px 20px;">
+            <div style="display:flex; align-items:center; gap:12px;">
+              <div style="width:40px; height:40px; border-radius:8px; background:var(--brand-orange-light); display:flex; align-items:center; justify-content:center; font-size:18px;">📅</div>
+              <div>
+                <div style="font-weight:600;">2026/04/30（木）</div>
+                <div style="font-size:13px; color:var(--brand-gray);">進捗確認・ステップアップ判定</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- 過去の面談履歴 -->
+        <div class="card">
+          <div class="card-header">
+            <span class="card-title">田中 太郎さんの面談履歴</span>
+          </div>
+          <div class="card-content" style="padding:0;">
+            <table class="data-table">
+              <thead>
+                <tr><th>日付</th><th>タイプ</th><th>概要</th></tr>
+              </thead>
+              <tbody>
+                <tr style="background:var(--brand-orange-light);">
+                  <td style="font-weight:600;">2026/03/05</td>
+                  <td><span class="badge badge-progress">1on1</span></td>
+                  <td>能力チェック進捗・顧客対応課題 <span style="font-size:11px; color:var(--brand-orange);">← 今回</span></td>
+                </tr>
+                <tr style="cursor:pointer;" data-page="meeting-detail">
+                  <td>2026/01/20</td>
+                  <td><span class="badge badge-progress">1on1</span></td>
+                  <td>Q3振り返り・チェックリスト確認</td>
+                </tr>
+                <tr style="cursor:pointer;" data-page="meeting-detail">
+                  <td>2025/10/15</td>
+                  <td><span class="badge badge-submitted">評価面談</span></td>
+                  <td>上期評価フィードバック</td>
+                </tr>
+                <tr style="cursor:pointer;" data-page="meeting-detail">
+                  <td>2025/07/10</td>
+                  <td><span class="badge badge-progress">1on1</span></td>
+                  <td>目標進捗確認</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ===== 面談記録入力（新規） ===== -->
+    <div class="page" id="page-meeting-new">
+      <div class="top-bar">
+        <div>
+          <div style="display:flex; align-items:center; gap:12px;">
+            <button class="btn btn-ghost" style="padding:4px 8px;" onclick="showPage('meetings')">← 戻る</button>
+            <h1>面談記録 新規作成</h1>
+          </div>
+        </div>
+      </div>
+
+      <div style="max-width:700px;">
+        <div class="card">
+          <div class="card-content">
+            <div style="display:grid; grid-template-columns:1fr 1fr 1fr; gap:12px; margin-bottom:16px;">
+              <div class="form-group" style="margin-bottom:0;">
+                <label class="form-label">対象者</label>
+                <select class="form-input">
+                  <option>田中 太郎</option>
+                  <option>鈴木 花子</option>
+                  <option>佐藤 一郎</option>
+                </select>
+              </div>
+              <div class="form-group" style="margin-bottom:0;">
+                <label class="form-label">面談タイプ</label>
+                <select class="form-input">
+                  <option>1on1</option>
+                  <option>評価面談</option>
+                  <option>その他</option>
+                </select>
+              </div>
+              <div class="form-group" style="margin-bottom:0;">
+                <label class="form-label">日付</label>
+                <input class="form-input" type="date" value="2026-03-11">
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label class="form-label">面談内容</label>
+              <textarea class="form-input" style="min-height:200px;" placeholder="面談の内容を記録...&#10;&#10;・議題1&#10;・議題2&#10;・次回アクション"></textarea>
+            </div>
+
+            <div class="form-group">
+              <label class="form-label">次回予定</label>
+              <div style="display:grid; grid-template-columns:1fr 1fr; gap:12px;">
+                <input class="form-input" type="date">
+                <input class="form-input" placeholder="予定内容（任意）">
+              </div>
+            </div>
+
+            <div style="display:flex; gap:8px; justify-content:flex-end;">
+              <button class="btn btn-outline" onclick="showPage('meetings')">キャンセル</button>
+              <button class="btn btn-primary">保存する</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ===== 全社俯瞰 ===== -->
+    <div class="page" id="page-admin-overview">
+      <div class="top-bar">
+        <div>
+          <h1>全社俯瞰</h1>
+          <p style="font-size:14px; color:var(--brand-gray); margin-top:2px;">2026年度 上期</p>
+        </div>
+        <button class="btn btn-outline btn-sm" data-page="admin-overview">📤 CSVエクスポート</button>
+      </div>
+
+      <!-- サマリーカード -->
+      <div style="display:grid; grid-template-columns:repeat(5,1fr); gap:12px; margin-bottom:20px;">
+        <div class="stat-card"><div class="stat-value">160</div><div class="stat-label">全社員</div></div>
+        <div class="stat-card"><div class="stat-value green">120</div><div class="stat-label">目標完了</div></div>
+        <div class="stat-card"><div class="stat-value orange">45</div><div class="stat-label">評価完了</div></div>
+        <div class="stat-card"><div class="stat-value" style="color:var(--color-info);">30</div><div class="stat-label">360度完了</div></div>
+        <div class="stat-card"><div class="stat-value" style="color:var(--color-success);">8</div><div class="stat-label">確定済</div></div>
+      </div>
+
+      <div style="display:grid; grid-template-columns:1fr 1fr; gap:16px; margin-bottom:20px;">
+        <!-- 職種別進捗 -->
+        <div class="card">
+          <div class="card-header"><span class="card-title">職種別 評価進捗</span></div>
+          <div class="card-content">
+            <div style="margin-bottom:10px;">
+              <div style="display:flex; justify-content:space-between; font-size:12px; margin-bottom:4px;"><span>設計営業（42名）</span><span style="font-weight:600;">35%</span></div>
+              <div class="stat-bar"><div class="stat-bar-fill" style="width:35%;"></div></div>
+            </div>
+            <div style="margin-bottom:10px;">
+              <div style="display:flex; justify-content:space-between; font-size:12px; margin-bottom:4px;"><span>IC（28名）</span><span style="font-weight:600;">40%</span></div>
+              <div class="stat-bar"><div class="stat-bar-fill" style="width:40%;"></div></div>
+            </div>
+            <div style="margin-bottom:10px;">
+              <div style="display:flex; justify-content:space-between; font-size:12px; margin-bottom:4px;"><span>現場監督（35名）</span><span style="font-weight:600;">25%</span></div>
+              <div class="stat-bar"><div class="stat-bar-fill" style="width:25%;"></div></div>
+            </div>
+            <div style="margin-bottom:10px;">
+              <div style="display:flex; justify-content:space-between; font-size:12px; margin-bottom:4px;"><span>実施設計（20名）</span><span style="font-weight:600;">30%</span></div>
+              <div class="stat-bar"><div class="stat-bar-fill" style="width:30%;"></div></div>
+            </div>
+            <div style="margin-bottom:10px;">
+              <div style="display:flex; justify-content:space-between; font-size:12px; margin-bottom:4px;"><span>マーケティング（10名）</span><span style="font-weight:600;">50%</span></div>
+              <div class="stat-bar"><div class="stat-bar-fill" style="width:50%;"></div></div>
+            </div>
+            <div style="margin-bottom:10px;">
+              <div style="display:flex; justify-content:space-between; font-size:12px; margin-bottom:4px;"><span>保育士（12名）</span><span style="font-weight:600;">20%</span></div>
+              <div class="stat-bar"><div class="stat-bar-fill" style="width:20%;"></div></div>
+            </div>
+            <div style="margin-bottom:10px;">
+              <div style="display:flex; justify-content:space-between; font-size:12px; margin-bottom:4px;"><span>人事（5名）</span><span style="font-weight:600;">60%</span></div>
+              <div class="stat-bar"><div class="stat-bar-fill" style="width:60%;"></div></div>
+            </div>
+            <div style="margin-bottom:10px;">
+              <div style="display:flex; justify-content:space-between; font-size:12px; margin-bottom:4px;"><span>経理（4名）</span><span style="font-weight:600;">25%</span></div>
+              <div class="stat-bar"><div class="stat-bar-fill" style="width:25%;"></div></div>
+            </div>
+            <div>
+              <div style="display:flex; justify-content:space-between; font-size:12px; margin-bottom:4px;"><span>総務（4名）</span><span style="font-weight:600;">25%</span></div>
+              <div class="stat-bar"><div class="stat-bar-fill" style="width:25%;"></div></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- スタジオ別進捗 -->
+        <div class="card">
+          <div class="card-header"><span class="card-title">スタジオ別 評価進捗</span></div>
+          <div class="card-content">
+            <div style="margin-bottom:10px;">
+              <div style="display:flex; justify-content:space-between; font-size:12px; margin-bottom:4px;"><span>スタジオA（松山）</span><span style="font-weight:600;">40%</span></div>
+              <div class="stat-bar"><div class="stat-bar-fill" style="width:40%;"></div></div>
+            </div>
+            <div style="margin-bottom:10px;">
+              <div style="display:flex; justify-content:space-between; font-size:12px; margin-bottom:4px;"><span>スタジオB（松山）</span><span style="font-weight:600;">35%</span></div>
+              <div class="stat-bar"><div class="stat-bar-fill" style="width:35%;"></div></div>
+            </div>
+            <div style="margin-bottom:10px;">
+              <div style="display:flex; justify-content:space-between; font-size:12px; margin-bottom:4px;"><span>スタジオC（今治）</span><span style="font-weight:600;">28%</span></div>
+              <div class="stat-bar"><div class="stat-bar-fill" style="width:28%;"></div></div>
+            </div>
+            <div style="margin-bottom:10px;">
+              <div style="display:flex; justify-content:space-between; font-size:12px; margin-bottom:4px;"><span>スタジオD（高松）</span><span style="font-weight:600;">45%</span></div>
+              <div class="stat-bar"><div class="stat-bar-fill" style="width:45%;"></div></div>
+            </div>
+            <div style="margin-bottom:10px;">
+              <div style="display:flex; justify-content:space-between; font-size:12px; margin-bottom:4px;"><span>スタジオE（岡山）</span><span style="font-weight:600;">30%</span></div>
+              <div class="stat-bar"><div class="stat-bar-fill" style="width:30%;"></div></div>
+            </div>
+            <div style="margin-bottom:10px;">
+              <div style="display:flex; justify-content:space-between; font-size:12px; margin-bottom:4px;"><span>スタジオF（徳島）</span><span style="font-weight:600;">20%</span></div>
+              <div class="stat-bar"><div class="stat-bar-fill" style="width:20%;"></div></div>
+            </div>
+            <div>
+              <div style="display:flex; justify-content:space-between; font-size:12px; margin-bottom:4px;"><span>本部</span><span style="font-weight:600;">55%</span></div>
+              <div class="stat-bar"><div class="stat-bar-fill" style="width:55%;"></div></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 等級分布 -->
+      <div class="card">
+        <div class="card-header"><span class="card-title">等級分布</span></div>
+        <div class="card-content">
+          <div style="display:flex; align-items:flex-end; gap:4px; height:120px; border-bottom:1px solid var(--brand-border); padding-bottom:4px;">
+            <div style="flex:1; text-align:center;"><div style="font-size:10px; font-weight:700; margin-bottom:2px;">45</div><div style="width:40px; margin:0 auto; background:var(--brand-orange); border-radius:3px 3px 0 0; height:100px;"></div></div>
+            <div style="flex:1; text-align:center;"><div style="font-size:10px; font-weight:700; margin-bottom:2px;">52</div><div style="width:40px; margin:0 auto; background:var(--brand-orange); border-radius:3px 3px 0 0; height:115px;"></div></div>
+            <div style="flex:1; text-align:center;"><div style="font-size:10px; font-weight:700; margin-bottom:2px;">38</div><div style="width:40px; margin:0 auto; background:#fcd99a; border-radius:3px 3px 0 0; height:84px;"></div></div>
+            <div style="flex:1; text-align:center;"><div style="font-size:10px; font-weight:700; margin-bottom:2px;">18</div><div style="width:40px; margin:0 auto; background:#E8E4DE; border-radius:3px 3px 0 0; height:40px;"></div></div>
+            <div style="flex:1; text-align:center;"><div style="font-size:10px; font-weight:700; margin-bottom:2px;">7</div><div style="width:40px; margin:0 auto; background:#E8E4DE; border-radius:3px 3px 0 0; height:16px;"></div></div>
+          </div>
+          <div style="display:flex; gap:4px; margin-top:6px;">
+            <span style="flex:1; text-align:center; font-size:11px; color:var(--brand-gray);">Lv.1</span>
+            <span style="flex:1; text-align:center; font-size:11px; color:var(--brand-gray);">Lv.2</span>
+            <span style="flex:1; text-align:center; font-size:11px; color:var(--brand-gray);">Lv.3</span>
+            <span style="flex:1; text-align:center; font-size:11px; color:var(--brand-gray);">Lv.4</span>
+            <span style="flex:1; text-align:center; font-size:11px; color:var(--brand-gray);">Lv.5</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ===== 物件データ取込 ===== -->
+    <div class="page" id="page-import-projects">
+      <div class="top-bar"><h1>物件データ取込</h1></div>
+
+      <div style="max-width:800px;">
+        <div class="card" style="margin-bottom:16px;">
+          <div class="card-header"><span class="card-title">❶ Excelファイルをアップロード</span></div>
+          <div class="card-content">
+            <div style="border:2px dashed var(--brand-border); border-radius:12px; padding:40px; text-align:center; cursor:pointer;" onmouseover="this.style.borderColor='var(--brand-orange)'; this.style.background='var(--brand-orange-light)'" onmouseout="this.style.borderColor='var(--brand-border)'; this.style.background=''">
+              <div style="font-size:36px; margin-bottom:8px;">🏠</div>
+              <div style="font-size:14px; font-weight:600;">物件データExcelをドラッグ&ドロップ</div>
+              <div style="font-size:12px; color:var(--brand-gray); margin-top:4px;">設計営業・IC向け担当物件一覧（.xlsx / .xls）</div>
+            </div>
+            <select class="form-input" style="width:auto; margin-top:12px;"><option>2026年度 上期</option><option>2025年度 下期</option></select>
+          </div>
+        </div>
+
+        <div class="card" style="margin-bottom:16px;">
+          <div class="card-header">
+            <span class="card-title">❷ プレビュー確認</span>
+            <span style="font-size:13px; color:var(--color-success); font-weight:600;">✅ 42名 × 128物件 マッチ</span>
+          </div>
+          <div class="card-content">
+            <div class="table-wrap">
+              <table>
+                <thead><tr><th>担当者</th><th>物件名</th><th style="text-align:right;">請負金額</th><th style="text-align:right;">粗利率</th><th style="text-align:right;">粗利額</th></tr></thead>
+                <tbody>
+                  <tr><td>松坂 直樹</td><td>○○邸</td><td style="text-align:right;">3,000万</td><td style="text-align:right;">28.5%</td><td style="text-align:right;">855万</td></tr>
+                  <tr><td>松坂 直樹</td><td>△△邸</td><td style="text-align:right;">2,800万</td><td style="text-align:right;">27.0%</td><td style="text-align:right;">756万</td></tr>
+                  <tr><td>田中 太郎</td><td>□□邸</td><td style="text-align:right;">2,500万</td><td style="text-align:right;">25.0%</td><td style="text-align:right;">625万</td></tr>
+                  <tr><td colspan="5" style="text-align:center; color:var(--brand-gray);">... 他125物件</td></tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-header"><span class="card-title">❸ 確定</span></div>
+          <div class="card-content" style="text-align:center; padding:24px;">
+            <p style="font-size:14px; color:var(--brand-olive); margin-bottom:16px;">42名 × 128物件のデータを取り込みます。</p>
+            <button class="btn btn-primary" style="padding:12px 32px; font-size:15px;">取込を実行する</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </main>
+</div>
+
+<script>
+  // === タブ→ページID マッピング ===
+  const tabMap = {
+    '基本情報': 'eval-edit',
+    '目標設定': 'eval-goal',
+    '成果評価': 'eval-result',
+    'Leader Radar': 'eval-leader',
+    '能力評価': 'eval-ability',
+    '行動評価': 'eval-behavior',
+    'チェックリスト': 'eval-checklist',
+    '総評': 'eval-summary',
+    '賞与情報': 'eval-bonus',
+    // 閲覧ページ用
+    'サマリー': 'eval-view',
+  };
+
+  // === サイドバーマッピング ===
+  const sidebarMap = {
+    'dashboard': 'nav-dashboard',
+    'eval': 'nav-eval',
+    'employee': 'nav-employees',
+    'behavior': 'nav-behavior',
+    'meeting': 'nav-meeting',
+    'meeting-detail': 'nav-meeting',
+    'import': 'nav-import',
+    'level': 'nav-settings',
+    'period': 'nav-period',
+    'admin': 'nav-dashboard',
+  };
+
+  // === メインナビゲーション関数 ===
+  function showPage(pageId) {
+    const isLogin = pageId === 'login';
+    const appContainer = document.getElementById('app-container');
+    const loginPage = document.getElementById('page-login');
+
+    if (isLogin) {
+      appContainer.style.display = 'none';
+      loginPage.classList.add('active');
+    } else {
+      appContainer.style.display = 'flex';
+      loginPage.classList.remove('active');
+
+      // ページ切り替え
+      document.querySelectorAll('.main-content .page').forEach(p => p.classList.remove('active'));
+      const target = document.getElementById('page-' + pageId);
+      if (target) {
+        target.classList.add('active');
+      }
+
+      // サイドバーのアクティブ状態
+      document.querySelectorAll('.sidebar-item').forEach(i => i.classList.remove('active'));
+      for (const [prefix, navId] of Object.entries(sidebarMap)) {
+        if (pageId.startsWith(prefix)) {
+          document.getElementById(navId)?.classList.add('active');
+          break;
+        }
+      }
+
+      // ページ上部にスクロール
+      document.querySelector('.main-content')?.scrollTo(0, 0);
+    }
+
+    // モックナビバーのボタン状態更新
+    document.querySelectorAll('.mock-nav button').forEach(btn => btn.classList.remove('active'));
+  }
+
+  // === 社員データ ===
+  const empData = {
+    matsuzaka: {
+      name: '松坂 直樹', initial: '松', email: 'matsuzaka@collabohouse.info',
+      job: '設計営業', level: 'Lv.4-2', role: 'SL', dept: 'スタジオA', year: '2015年', leader: 'はい',
+      history: [
+        { period: '2026 上期', lv: 'Lv.4-2', ability: '—', behavior: '—', status: 'progress', statusText: '入力中', action: 'eval-edit', actionText: '編集→' },
+        { period: '2025 下期', lv: 'Lv.4-2', ability: '4.20', behavior: '28', status: 'finalized', statusText: '確定', action: 'eval-view', actionText: '閲覧→' },
+        { period: '2025 上期', lv: 'Lv.4-1', ability: '4.00', behavior: '26', status: 'finalized', statusText: '確定', action: 'eval-view', actionText: '閲覧→' },
+      ],
+      chart: [{ label: '25上', val: 4.00 }, { label: '25下', val: 4.20 }, { label: '26上', val: null }],
+    },
+    tanaka: {
+      name: '田中 太郎', initial: '田', email: 'tanaka@collabohouse.info',
+      job: '設計営業', level: 'Lv.2-1', role: '—', dept: 'スタジオA', year: '2020年', leader: 'いいえ',
+      history: [
+        { period: '2026 上期', lv: 'Lv.2-1', ability: '—', behavior: '—', status: 'progress', statusText: '入力中', action: 'eval-edit', actionText: '編集→' },
+        { period: '2025 下期', lv: 'Lv.2-1', ability: '3.20', behavior: '22', status: 'finalized', statusText: '確定', action: 'eval-view', actionText: '閲覧→' },
+        { period: '2025 上期', lv: 'Lv.1-3', ability: '3.00', behavior: '20', status: 'finalized', statusText: '確定', action: 'eval-view', actionText: '閲覧→' },
+      ],
+      chart: [{ label: '25上', val: 3.00 }, { label: '25下', val: 3.20 }, { label: '26上', val: null }],
+    },
+    suzuki: {
+      name: '鈴木 花子', initial: '鈴', email: 'suzuki@collabohouse.info',
+      job: 'IC', level: 'Lv.3-1', role: '—', dept: 'スタジオA', year: '2018年', leader: 'いいえ',
+      history: [
+        { period: '2026 上期', lv: 'Lv.3-1', ability: '—', behavior: '—', status: 'progress', statusText: '入力中', action: 'eval-edit', actionText: '編集→' },
+        { period: '2025 下期', lv: 'Lv.3-1', ability: '3.60', behavior: '24', status: 'finalized', statusText: '確定', action: 'eval-view', actionText: '閲覧→' },
+        { period: '2025 上期', lv: 'Lv.2-3', ability: '3.40', behavior: '23', status: 'finalized', statusText: '確定', action: 'eval-view', actionText: '閲覧→' },
+      ],
+      chart: [{ label: '25上', val: 3.40 }, { label: '25下', val: 3.60 }, { label: '26上', val: null }],
+    },
+    sato: {
+      name: '佐藤 一郎', initial: '佐', email: 'sato@collabohouse.info',
+      job: '実施設計', level: 'Lv.2-2', role: '—', dept: 'スタジオB', year: '2022年', leader: 'いいえ',
+      history: [
+        { period: '2026 上期', lv: 'Lv.2-2', ability: '—', behavior: '—', status: 'progress', statusText: '入力中', action: 'eval-edit', actionText: '編集→' },
+        { period: '2025 下期', lv: 'Lv.2-2', ability: '3.00', behavior: '21', status: 'finalized', statusText: '確定', action: 'eval-view', actionText: '閲覧→' },
+        { period: '2025 上期', lv: 'Lv.2-1', ability: '2.80', behavior: '19', status: 'finalized', statusText: '確定', action: 'eval-view', actionText: '閲覧→' },
+      ],
+      chart: [{ label: '25上', val: 2.80 }, { label: '25下', val: 3.00 }, { label: '26上', val: null }],
+    },
+    yamada: {
+      name: '山田 美咲', initial: '山', email: 'yamada@collabohouse.info',
+      job: '現場監督', level: 'Lv.2-2', role: '—', dept: 'スタジオB', year: '2019年', leader: 'いいえ',
+      history: [
+        { period: '2026 上期', lv: 'Lv.2-2', ability: '—', behavior: '—', status: 'progress', statusText: '入力中', action: 'eval-edit', actionText: '編集→' },
+        { period: '2025 下期', lv: 'Lv.2-2', ability: '3.40', behavior: '24', status: 'finalized', statusText: '確定', action: 'eval-view', actionText: '閲覧→' },
+        { period: '2025 上期', lv: 'Lv.2-1', ability: '3.20', behavior: '22', status: 'finalized', statusText: '確定', action: 'eval-view', actionText: '閲覧→' },
+      ],
+      chart: [{ label: '25上', val: 3.20 }, { label: '25下', val: 3.40 }, { label: '26上', val: null }],
+    },
+    takahashi: {
+      name: '高橋 裕子', initial: '高', email: 'takahashi@collabohouse.info',
+      job: '保育士', level: 'Lv.2-1', role: '—', dept: 'キッズ', year: '2021年', leader: 'いいえ',
+      history: [
+        { period: '2026 上期', lv: 'Lv.2-1', ability: '—', behavior: '—', status: 'progress', statusText: '入力中', action: 'eval-edit', actionText: '編集→' },
+        { period: '2025 下期', lv: 'Lv.2-1', ability: '3.50', behavior: '23', status: 'finalized', statusText: '確定', action: 'eval-view', actionText: '閲覧→' },
+        { period: '2025 上期', lv: 'Lv.1-3', ability: '3.20', behavior: '21', status: 'finalized', statusText: '確定', action: 'eval-view', actionText: '閲覧→' },
+      ],
+      chart: [{ label: '25上', val: 3.20 }, { label: '25下', val: 3.50 }, { label: '26上', val: null }],
+    },
+    ito: {
+      name: '伊藤 健太', initial: '伊', email: 'ito@collabohouse.info',
+      job: 'マーケティング', level: 'Lv.3-1', role: '—', dept: '本部', year: '2017年', leader: 'いいえ',
+      history: [
+        { period: '2026 上期', lv: 'Lv.3-1', ability: '—', behavior: '—', status: 'progress', statusText: '入力中', action: 'eval-edit', actionText: '編集→' },
+        { period: '2025 下期', lv: 'Lv.3-1', ability: '3.80', behavior: '25', status: 'finalized', statusText: '確定', action: 'eval-view', actionText: '閲覧→' },
+        { period: '2025 上期', lv: 'Lv.2-3', ability: '3.60', behavior: '24', status: 'finalized', statusText: '確定', action: 'eval-view', actionText: '閲覧→' },
+      ],
+      chart: [{ label: '25上', val: 3.60 }, { label: '25下', val: 3.80 }, { label: '26上', val: null }],
+    },
+  };
+
+  // 社員詳細画面を更新
+  function showEmployee(key) {
+    const d = empData[key];
+    if (!d) return;
+    document.getElementById('emp-detail-name').textContent = d.name;
+    document.getElementById('emp-detail-fullname').textContent = d.name;
+    document.getElementById('emp-detail-avatar').textContent = d.initial;
+    document.getElementById('emp-detail-email').textContent = d.email;
+    document.getElementById('emp-detail-job').textContent = d.job;
+    document.getElementById('emp-detail-level').textContent = d.level;
+    document.getElementById('emp-detail-role').textContent = d.role;
+    document.getElementById('emp-detail-dept').textContent = d.dept;
+    document.getElementById('emp-detail-year').textContent = d.year;
+    document.getElementById('emp-detail-leader').textContent = d.leader;
+
+    // 評価履歴テーブル
+    const tbody = document.getElementById('emp-detail-history');
+    tbody.innerHTML = d.history.map(h => {
+      const badgeClass = h.status === 'progress' ? 'badge-progress' : h.status === 'finalized' ? 'badge-finalized' : 'badge-draft';
+      const abilityStyle = h.ability === '—' ? 'color:var(--brand-gray);' : 'font-weight:600;';
+      const behaviorStyle = h.behavior === '—' ? 'color:var(--brand-gray);' : 'font-weight:600;';
+      return '<tr>' +
+        '<td>' + h.period + '</td>' +
+        '<td style="text-align:center;">' + h.lv + '</td>' +
+        '<td style="text-align:center; ' + abilityStyle + '">' + h.ability + '</td>' +
+        '<td style="text-align:center; ' + behaviorStyle + '">' + h.behavior + '</td>' +
+        '<td style="text-align:center;"><span class="badge ' + badgeClass + '">' + h.statusText + '</span></td>' +
+        '<td><button class="btn btn-ghost btn-sm" data-page="' + h.action + '">' + h.actionText + '</button></td>' +
+        '</tr>';
+    }).join('');
+
+    // 能力推移チャート
+    const maxVal = 5;
+    const chart = document.getElementById('emp-detail-chart');
+    const labels = document.getElementById('emp-detail-chart-labels');
+    chart.innerHTML = d.chart.map(c => {
+      if (c.val === null) {
+        return '<div style="flex:1; text-align:center;">' +
+          '<div style="font-size:10px; color:var(--brand-gray); margin-bottom:2px;">—</div>' +
+          '<div style="width:24px; margin:0 auto; border:2px dashed var(--brand-border); border-radius:3px 3px 0 0; height:60px;"></div></div>';
+      }
+      const h = Math.round((c.val / maxVal) * 100);
+      const isLatest = d.chart.indexOf(c) === d.chart.length - 2;
+      const bg = isLatest ? 'var(--brand-orange)' : '#fcd99a';
+      return '<div style="flex:1; text-align:center;">' +
+        '<div style="font-size:10px; color:var(--brand-gray); margin-bottom:2px;">' + c.val.toFixed(2) + '</div>' +
+        '<div style="width:24px; margin:0 auto; background:' + bg + '; border-radius:3px 3px 0 0; height:' + h + 'px;"></div></div>';
+    }).join('');
+    labels.innerHTML = d.chart.map(c => '<span style="flex:1; text-align:center; font-size:10px; color:var(--brand-gray);">' + c.label + '</span>').join('');
+
+    // 評価シートのヘッダーも連動更新
+    document.querySelectorAll('.top-bar h1').forEach(h1 => {
+      if (h1.textContent.includes('の評価シート')) {
+        h1.textContent = d.name + 'の評価シート';
+      }
+    });
+    document.querySelectorAll('.top-bar p').forEach(p => {
+      if (p.textContent.match(/\/ Lv\.\d/)) {
+        p.textContent = d.job + ' / ' + d.level + ' / 2026年度 上期';
+      }
+    });
+
+    showPage('employee-detail');
+  }
+
+  // === 全イベント委譲 ===
+  document.addEventListener('click', function(e) {
+    const el = e.target;
+
+    // --- タブクリック（closestで確実に拾う）---
+    const tabEl = el.closest('.tab');
+    if (tabEl && !tabEl.classList.contains('active')) {
+      const text = tabEl.textContent.trim();
+      const pageId = tabMap[text];
+      if (pageId) {
+        showPage(pageId);
+        return;
+      }
+    }
+
+    // --- 社員一覧の行クリック ---
+    const empRow = el.closest('.emp-row');
+    if (empRow) {
+      const key = empRow.dataset.emp;
+      if (key && empData[key]) { showEmployee(key); return; }
+    }
+
+    // --- 面談記録 年度タブ ---
+    const yearTab = el.closest('.meeting-year-tab');
+    if (yearTab) {
+      const year = yearTab.dataset.year;
+      document.querySelectorAll('.meeting-year-tab').forEach(t => {
+        t.style.background = '#fff';
+        t.style.color = 'var(--brand-charcoal)';
+        t.style.border = '1px solid var(--brand-border)';
+      });
+      yearTab.style.background = 'var(--brand-orange)';
+      yearTab.style.color = '#fff';
+      yearTab.style.border = '1px solid var(--brand-orange)';
+      document.querySelectorAll('.meeting-year-content').forEach(c => {
+        c.style.display = c.dataset.year === year ? '' : 'none';
+      });
+      return;
+    }
+
+    // --- スコアボタン ---
+    const scoreBtn = el.closest('.score-btn');
+    if (scoreBtn) {
+      const group = scoreBtn.parentElement;
+      group.querySelectorAll('.score-btn').forEach(b => b.classList.remove('selected'));
+      scoreBtn.classList.add('selected');
+      return;
+    }
+
+    // --- ランクボタン ---
+    const rankBtn = el.closest('.rank-btn');
+    if (rankBtn) {
+      const group = rankBtn.parentElement;
+      group.querySelectorAll('.rank-btn').forEach(b => b.classList.remove('selected'));
+      rankBtn.classList.add('selected');
+      return;
+    }
+
+    // --- data-page属性によるナビ ---
+    const navEl = el.closest('[data-page]');
+    if (navEl) {
+      showPage(navEl.dataset.page);
+      return;
+    }
+
+    // --- チェックボックス連動 ---
+    if (el.type === 'checkbox' && el.closest('.checklist-item')) {
+      const label = el.nextElementSibling;
+      if (label) {
+        label.style.color = el.checked ? '' : 'var(--brand-gray)';
+      }
+    }
+  });
+</script>
+
+</body>
+</html>
